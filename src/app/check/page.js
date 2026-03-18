@@ -1,0 +1,878 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+
+// ─── Shared styles ───────────────────────────────────────────────────────────
+
+const s = {
+  page: {
+    minHeight: '100vh',
+    background: 'var(--color-bg)',
+    fontFamily: 'var(--font-body)',
+    paddingBottom: '48px',
+  },
+  header: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+    background: 'var(--color-surface)',
+    borderBottom: '1px solid var(--color-border)',
+    padding: '16px 24px 12px',
+  },
+  topRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBottom: '10px',
+  },
+  backBtn: {
+    background: 'none',
+    border: 'none',
+    padding: '4px 8px 4px 0',
+    cursor: 'pointer',
+    fontSize: '18px',
+    color: 'var(--color-primary)',
+    lineHeight: 1,
+  },
+  logo: {
+    fontFamily: 'var(--font-display)',
+    fontSize: '17px',
+    color: 'var(--color-primary)',
+  },
+  progressTrack: {
+    height: '4px',
+    background: 'var(--color-border)',
+    borderRadius: '2px',
+    overflow: 'hidden',
+  },
+  progressFill: (pct) => ({
+    height: '100%',
+    width: `${pct}%`,
+    background: 'var(--color-accent)',
+    borderRadius: '2px',
+    transition: 'width 0.35s ease-out',
+  }),
+  stepLabel: {
+    fontSize: '12px',
+    color: '#9CA3AF',
+    marginBottom: '6px',
+  },
+  card: {
+    background: 'var(--color-surface)',
+    borderRadius: 'var(--radius-lg)',
+    boxShadow: 'var(--shadow-card)',
+    padding: '28px 24px',
+    marginTop: '24px',
+    maxWidth: '520px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  label: {
+    display: 'block',
+    fontSize: '18px',
+    fontWeight: '600',
+    color: 'var(--color-primary)',
+    marginBottom: '6px',
+    lineHeight: 1.4,
+    fontFamily: 'var(--font-display)',
+  },
+  hint: {
+    fontSize: '13px',
+    color: '#9CA3AF',
+    marginBottom: '16px',
+    lineHeight: 1.5,
+  },
+  input: {
+    width: '100%',
+    padding: '13px 16px',
+    fontSize: '16px',
+    border: '1.5px solid var(--color-border)',
+    borderRadius: 'var(--radius-md)',
+    outline: 'none',
+    boxSizing: 'border-box',
+    fontFamily: 'var(--font-body)',
+    color: 'var(--color-primary)',
+    background: '#fff',
+    transition: 'border-color 0.2s',
+  },
+  inputPrefix: {
+    display: 'flex',
+    alignItems: 'center',
+    border: '1.5px solid var(--color-border)',
+    borderRadius: 'var(--radius-md)',
+    overflow: 'hidden',
+    background: '#fff',
+    transition: 'border-color 0.2s',
+  },
+  prefix: {
+    padding: '13px 14px',
+    fontSize: '16px',
+    color: '#9CA3AF',
+    background: '#F9FAFB',
+    borderRight: '1.5px solid var(--color-border)',
+    userSelect: 'none',
+  },
+  prefixInput: {
+    flex: 1,
+    padding: '13px 16px',
+    fontSize: '16px',
+    border: 'none',
+    outline: 'none',
+    fontFamily: 'var(--font-body)',
+    color: 'var(--color-primary)',
+    background: 'transparent',
+    width: '100%',
+  },
+  optionGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+  },
+  option: (selected) => ({
+    padding: '14px 18px',
+    borderRadius: 'var(--radius-md)',
+    border: `1.5px solid ${selected ? 'var(--color-accent)' : 'var(--color-border)'}`,
+    background: selected ? 'var(--color-teal-bg)' : '#fff',
+    color: selected ? 'var(--color-accent)' : 'var(--color-primary)',
+    fontSize: '15px',
+    fontWeight: selected ? '600' : '400',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'all 0.15s ease',
+    fontFamily: 'var(--font-body)',
+  }),
+  pillRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginTop: '8px',
+  },
+  pill: (selected) => ({
+    padding: '8px 16px',
+    borderRadius: '100px',
+    border: `1.5px solid ${selected ? 'var(--color-primary)' : 'var(--color-border)'}`,
+    background: selected ? 'var(--color-primary)' : '#fff',
+    color: selected ? '#fff' : 'var(--color-primary)',
+    fontSize: '13px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+    fontFamily: 'var(--font-body)',
+  }),
+  unknownLink: {
+    display: 'block',
+    marginTop: '10px',
+    fontSize: '13px',
+    color: '#9CA3AF',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    textDecorationColor: '#D1D5DB',
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    fontFamily: 'var(--font-body)',
+    textAlign: 'left',
+  },
+  tooltipBox: {
+    marginTop: '12px',
+    padding: '14px 16px',
+    background: 'var(--color-blue-bg)',
+    borderRadius: 'var(--radius-md)',
+    borderLeft: '3px solid var(--color-blue)',
+    fontSize: '13px',
+    color: '#374151',
+    lineHeight: 1.6,
+  },
+  nextBtn: (disabled) => ({
+    marginTop: '24px',
+    width: '100%',
+    padding: '15px',
+    background: disabled ? '#E5E7EB' : 'var(--color-accent)',
+    color: disabled ? '#9CA3AF' : '#fff',
+    border: 'none',
+    borderRadius: 'var(--radius-md)',
+    fontSize: '16px',
+    fontWeight: '600',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    transition: 'background 0.2s',
+    fontFamily: 'var(--font-body)',
+  }),
+  skipLink: {
+    display: 'block',
+    textAlign: 'center',
+    marginTop: '14px',
+    fontSize: '13px',
+    color: '#9CA3AF',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    width: '100%',
+    fontFamily: 'var(--font-body)',
+    textDecoration: 'underline',
+    textDecorationColor: '#D1D5DB',
+  },
+  privacyNote: {
+    textAlign: 'center',
+    fontSize: '12px',
+    color: '#9CA3AF',
+    marginTop: '20px',
+  },
+  divider: {
+    border: 'none',
+    borderTop: '1px solid var(--color-border)',
+    margin: '20px 0',
+  },
+  sectionLabel: {
+    fontSize: '11px',
+    fontWeight: '700',
+    letterSpacing: '0.08em',
+    color: '#9CA3AF',
+    textTransform: 'uppercase',
+    marginBottom: '10px',
+  },
+}
+
+// ─── Initial form state ───────────────────────────────────────────────────────
+
+const INITIAL = {
+  age: '',
+  annualIncome: '',
+  hasHosp: null,
+  hasCI: null,
+  ciAmount: '',
+  ciBand: null,
+  ciUseBand: false,
+  hasECI: null,
+  eciAmount: '',
+  eciBand: null,
+  eciUseBand: false,
+  hasLife: null,
+  lifeAmount: '',
+  lifeBand: null,
+  lifeUseBand: false,
+  monthlyPremium: '',
+  yearlyPremium: '',
+  premiumMode: 'monthly',
+  primaryConcern: null,
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function parseNum(val) {
+  if (val === null || val === undefined || val === '') return null
+  const n = parseInt(String(val).replace(/,/g, ''), 10)
+  return isNaN(n) ? null : n
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function AmountInput({ value, onChange, onUnknown, placeholder = 'e.g. 200k' }) {
+  const [display, setDisplay] = useState(
+    value ? Number(value).toLocaleString('en-SG') : ''
+  )
+
+  function parseInput(raw) {
+    const cleaned = raw.trim().toLowerCase().replace(/,/g, '')
+    if (!cleaned) return null
+    const kMatch = cleaned.match(/^([\d.]+)\s*k$/)
+    if (kMatch) return Math.round(parseFloat(kMatch[1]) * 1_000)
+    const mMatch = cleaned.match(/^([\d.]+)\s*m$/)
+    if (mMatch) return Math.round(parseFloat(mMatch[1]) * 1_000_000)
+    const n = parseFloat(cleaned)
+    return isNaN(n) ? null : Math.round(n)
+  }
+
+  function handleChange(e) {
+    setDisplay(e.target.value)
+    const parsed = parseInput(e.target.value)
+    onChange(parsed)
+  }
+
+  function handleBlur() {
+    const parsed = parseInput(display)
+    if (parsed !== null) {
+      setDisplay(parsed.toLocaleString('en-SG'))
+      onChange(parsed)
+    } else {
+      setDisplay('')
+      onChange(null)
+    }
+  }
+
+  function handleFocus() {
+    if (value) setDisplay(String(value))
+  }
+
+  return (
+    <>
+      <div style={s.inputPrefix}>
+        <span style={s.prefix}>S$</span>
+        <input
+          type="text"
+          inputMode="decimal"
+          placeholder={placeholder}
+          value={display}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          style={s.prefixInput}
+        />
+      </div>
+      {onUnknown && (
+        <button style={s.unknownLink} onClick={onUnknown}>
+          I don't know the exact amount
+        </button>
+      )}
+    </>
+  )
+}
+
+function BandSelector({ options, value, onChange }) {
+  return (
+    <div style={s.pillRow}>
+      {options.map(opt => (
+        <button
+          key={opt.value}
+          style={s.pill(value === opt.value)}
+          onClick={() => onChange(opt.value)}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function ECITooltip() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div style={{ marginBottom: '12px' }}>
+      <button
+        style={{
+          ...s.unknownLink,
+          color: 'var(--color-blue)',
+          textDecorationColor: 'var(--color-blue)',
+        }}
+        onClick={() => setOpen(o => !o)}
+      >
+        {open ? '▾' : '▸'} What is Early Critical Illness (ECI)?
+      </button>
+      {open && (
+        <div style={s.tooltipBox}>
+          Standard CI policies pay out at <strong>late-stage</strong> diagnosis —
+          confirmed heart failure, late-stage cancer, etc. ECI cover pays out{' '}
+          <strong>earlier</strong>, at a minor heart attack, early-stage cancer, or
+          initial stroke — when treatment is most intensive and costs are highest.
+          Check your policy document for "early stage" or "special benefit" to see
+          if you have it.
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PremiumModeToggle({ mode, onChange }) {
+  return (
+    <div style={{
+      display: 'flex',
+      background: '#F3F4F6',
+      borderRadius: 'var(--radius-md)',
+      padding: '4px',
+      marginBottom: '16px',
+      gap: '4px',
+    }}>
+      {[
+        { value: 'monthly', label: 'Monthly' },
+        { value: 'yearly',  label: 'Yearly' },
+      ].map(tab => (
+        <button
+          key={tab.value}
+          onClick={() => onChange(tab.value)}
+          style={{
+            flex: 1,
+            padding: '8px',
+            borderRadius: '8px',
+            border: 'none',
+            background: mode === tab.value ? '#fff' : 'transparent',
+            color: mode === tab.value ? 'var(--color-primary)' : '#9CA3AF',
+            fontWeight: mode === tab.value ? '600' : '400',
+            fontSize: '14px',
+            cursor: 'pointer',
+            fontFamily: 'var(--font-body)',
+            boxShadow: mode === tab.value ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// ─── Main page ────────────────────────────────────────────────────────────────
+
+const TOTAL_STEPS = 6
+
+export default function CheckPage() {
+  const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+  const [step, setStep] = useState(1)
+  const [form, setForm] = useState(INITIAL)
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem('iga_inputs')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        setForm({
+          age: parsed.age ?? '',
+          annualIncome: parsed.annualIncome ?? '',
+          hasHosp: parsed.hasHosp ?? null,
+          hasCI: parsed.hasCI ?? null,
+          ciAmount: parsed.ciAmount ?? '',
+          ciBand: parsed.ciBand ?? null,
+          ciUseBand: parsed.ciBand !== null,
+          hasECI: parsed.hasECI ?? null,
+          eciAmount: parsed.eciAmount ?? '',
+          eciBand: parsed.eciBand ?? null,
+          eciUseBand: parsed.eciBand !== null,
+          hasLife: parsed.hasLife ?? null,
+          lifeAmount: parsed.lifeAmount ?? '',
+          lifeBand: parsed.lifeBand ?? null,
+          lifeUseBand: parsed.lifeBand !== null,
+          monthlyPremium: parsed.monthlyPremium ?? '',
+          yearlyPremium: parsed.yearlyPremium ?? '',
+          premiumMode: parsed.premiumMode ?? 'monthly',
+          primaryConcern: parsed.primaryConcern ?? null,
+        })
+      }
+    } catch {
+      // sessionStorage unavailable — start fresh
+    }
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
+  const set = (key, val) => setForm(f => ({ ...f, [key]: val }))
+  const progress = (step / TOTAL_STEPS) * 100
+
+  function buildInputs() {
+    return {
+      age: parseInt(form.age) || null,
+      annualIncome: parseNum(form.annualIncome),
+      hasHosp: form.hasHosp,
+      hasCI: form.hasCI,
+      ciAmount: form.ciUseBand ? null : parseNum(form.ciAmount),
+      ciBand: form.ciUseBand ? form.ciBand : null,
+      hasECI: form.hasECI ?? 'no',
+      eciAmount: form.eciUseBand ? null : parseNum(form.eciAmount),
+      eciBand: form.eciUseBand ? form.eciBand : null,
+      hasLife: form.hasLife,
+      lifeAmount: form.lifeUseBand ? null : parseNum(form.lifeAmount),
+      lifeBand: form.lifeUseBand ? form.lifeBand : null,
+      monthlyPremium: parseNum(form.monthlyPremium),
+      yearlyPremium: parseNum(form.yearlyPremium),
+      premiumMode: form.premiumMode,
+      primaryConcern: form.primaryConcern,
+    }
+  }
+
+  function handleSubmit() {
+    const inputs = buildInputs()
+    sessionStorage.setItem('iga_inputs', JSON.stringify(inputs))
+    router.push('/loading')
+  }
+
+  function next() {
+    sessionStorage.setItem('iga_inputs', JSON.stringify(buildInputs()))
+    if (step < TOTAL_STEPS) setStep(s => s + 1)
+    else handleSubmit()
+  }
+
+  function back() {
+    if (step > 1) setStep(s => s - 1)
+    else router.push('/')
+  }
+
+  function canProceed() {
+    if (step === 1) return form.age && parseNum(form.annualIncome) > 0
+    if (step === 2) return form.hasHosp !== null
+    if (step === 3) {
+      if (form.hasCI === 'no' || form.hasCI === 'unsure') return true
+      if (form.hasCI === 'yes') {
+        return form.ciUseBand
+          ? form.ciBand !== null
+          : parseNum(form.ciAmount) > 0
+      }
+      return false
+    }
+    if (step === 4) {
+      if (form.hasLife === 'no' || form.hasLife === 'unsure') return true
+      if (form.hasLife === 'yes') {
+        return form.lifeUseBand
+          ? form.lifeBand !== null
+          : parseNum(form.lifeAmount) > 0
+      }
+      return false
+    }
+    if (step === 5) return true
+    if (step === 6) return true
+    return false
+  }
+
+  // ── Step renderers ──────────────────────────────────────────────────────────
+
+  function renderStep() {
+    switch (step) {
+
+      case 1: return (
+        <>
+          <label style={s.label}>How old are you?</label>
+          <p style={s.hint}>We use this to contextualise your coverage benchmarks.</p>
+          <input
+            type="number"
+            inputMode="numeric"
+            placeholder="e.g. 28"
+            value={form.age}
+            onChange={e => set('age', e.target.value)}
+            style={{ ...s.input, marginBottom: '20px' }}
+            min={18}
+            max={70}
+          />
+
+          <hr style={s.divider} />
+
+          <label style={s.label}>What is your annual income?</label>
+          <p style={s.hint}>
+            Your gross annual salary in SGD. Tip: type{' '}
+            <strong>60k</strong> for $60,000 or <strong>1.2m</strong> for $1,200,000.
+          </p>
+          <AmountInput
+            value={form.annualIncome}
+            onChange={v => set('annualIncome', v)}
+            placeholder="e.g. 60k"
+          />
+        </>
+      )
+
+      case 2: return (
+        <>
+          <label style={s.label}>Do you have hospitalisation insurance?</label>
+          <p style={s.hint}>
+            This includes MediShield Life top-ups and Integrated Shield Plans
+            (AIA, Prudential, NTUC, etc.).
+          </p>
+          <div style={s.optionGrid}>
+            {[
+              { value: 'yes',    label: "Yes, I'm covered" },
+              { value: 'no',     label: "No, I don't have any" },
+              { value: 'unsure', label: 'Not sure' },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                style={s.option(form.hasHosp === opt.value)}
+                onClick={() => set('hasHosp', opt.value)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )
+
+      case 3: return (
+        <>
+          <label style={s.label}>Do you have critical illness (CI) coverage?</label>
+          <p style={s.hint}>
+            A CI policy pays a lump sum on diagnosis of major illnesses like
+            cancer, heart attack, or stroke.
+          </p>
+          <div style={s.optionGrid}>
+            {[
+              { value: 'yes',    label: 'Yes' },
+              { value: 'no',     label: 'No' },
+              { value: 'unsure', label: 'Not sure' },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                style={s.option(form.hasCI === opt.value)}
+                onClick={() => set('hasCI', opt.value)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {form.hasCI === 'yes' && (
+            <>
+              <hr style={s.divider} />
+              <p style={s.sectionLabel}>CI sum assured</p>
+              {!form.ciUseBand ? (
+                <AmountInput
+                  value={form.ciAmount}
+                  onChange={v => set('ciAmount', v)}
+                  placeholder="e.g. 200k"
+                  onUnknown={() => set('ciUseBand', true)}
+                />
+              ) : (
+                <>
+                  <BandSelector
+                    value={form.ciBand}
+                    onChange={v => set('ciBand', v)}
+                    options={[
+                      { value: 'low',     label: '< 2× income' },
+                      { value: 'partial', label: '2–4× income' },
+                      { value: 'high',    label: '> 4× income' },
+                    ]}
+                  />
+                  <button
+                    style={s.unknownLink}
+                    onClick={() => { set('ciUseBand', false); set('ciBand', null) }}
+                  >
+                    I know the exact amount
+                  </button>
+                </>
+              )}
+
+              <hr style={s.divider} />
+              <ECITooltip />
+              <p style={s.sectionLabel}>Do you also have early critical illness (ECI)?</p>
+              <div style={s.optionGrid}>
+                {[
+                  { value: 'yes', label: 'Yes' },
+                  { value: 'no',  label: 'No' },
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    style={s.option(form.hasECI === opt.value)}
+                    onClick={() => set('hasECI', opt.value)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+
+              {form.hasECI === 'yes' && (
+                <>
+                  <p style={{ ...s.sectionLabel, marginTop: '16px' }}>ECI sum assured</p>
+                  {!form.eciUseBand ? (
+                    <AmountInput
+                      value={form.eciAmount}
+                      onChange={v => set('eciAmount', v)}
+                      placeholder="e.g. 75k"
+                      onUnknown={() => set('eciUseBand', true)}
+                    />
+                  ) : (
+                    <>
+                      <BandSelector
+                        value={form.eciBand}
+                        onChange={v => set('eciBand', v)}
+                        options={[
+                          { value: 'low',  label: '< S$50k' },
+                          { value: 'mid',  label: 'S$50–100k' },
+                          { value: 'high', label: '> S$100k' },
+                        ]}
+                      />
+                      <button
+                        style={s.unknownLink}
+                        onClick={() => { set('eciUseBand', false); set('eciBand', null) }}
+                      >
+                        I know the exact amount
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </>
+      )
+
+      case 4: return (
+        <>
+          <label style={s.label}>Do you have life or TPD coverage?</label>
+          <p style={s.hint}>
+            Life insurance pays out on death. Total Permanent Disability (TPD)
+            pays if you can no longer work.
+          </p>
+          <div style={s.optionGrid}>
+            {[
+              { value: 'yes',    label: 'Yes' },
+              { value: 'no',     label: 'No' },
+              { value: 'unsure', label: 'Not sure' },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                style={s.option(form.hasLife === opt.value)}
+                onClick={() => set('hasLife', opt.value)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {form.hasLife === 'yes' && (
+            <>
+              <hr style={s.divider} />
+              <p style={s.sectionLabel}>Life / TPD sum assured</p>
+              {!form.lifeUseBand ? (
+                <AmountInput
+                  value={form.lifeAmount}
+                  onChange={v => set('lifeAmount', v)}
+                  placeholder="e.g. 500k"
+                  onUnknown={() => set('lifeUseBand', true)}
+                />
+              ) : (
+                <>
+                  <BandSelector
+                    value={form.lifeBand}
+                    onChange={v => set('lifeBand', v)}
+                    options={[
+                      { value: 'low',     label: '< 5× income' },
+                      { value: 'partial', label: '5–9× income' },
+                      { value: 'high',    label: '> 9× income' },
+                    ]}
+                  />
+                  <button
+                    style={s.unknownLink}
+                    onClick={() => { set('lifeUseBand', false); set('lifeBand', null) }}
+                  >
+                    I know the exact amount
+                  </button>
+                </>
+              )}
+            </>
+          )}
+        </>
+      )
+
+      case 5: return (
+        <>
+          <label style={s.label}>How much do you pay for all policies?</label>
+          <p style={s.hint}>
+            Add up all your insurance premiums — life, CI, hospitalisation, etc.
+            Optional but improves your score accuracy.
+          </p>
+
+          <PremiumModeToggle
+            mode={form.premiumMode}
+            onChange={mode => {
+              set('premiumMode', mode)
+              // Keep values in sync when switching modes
+              if (mode === 'yearly' && form.monthlyPremium) {
+                set('yearlyPremium', parseNum(form.monthlyPremium) * 12)
+              }
+              if (mode === 'monthly' && form.yearlyPremium) {
+                set('monthlyPremium', Math.round(parseNum(form.yearlyPremium) / 12))
+              }
+            }}
+          />
+
+          <AmountInput
+            key={form.premiumMode}
+            value={form.premiumMode === 'yearly' ? form.yearlyPremium : form.monthlyPremium}
+            onChange={v => {
+              if (form.premiumMode === 'yearly') {
+                set('yearlyPremium', v)
+                set('monthlyPremium', v ? Math.round(v / 12) : null)
+              } else {
+                set('monthlyPremium', v)
+                set('yearlyPremium', v ? v * 12 : null)
+              }
+            }}
+            placeholder={form.premiumMode === 'yearly' ? 'e.g. 4,200' : 'e.g. 350'}
+          />
+
+          {(form.premiumMode === 'yearly'
+            ? parseNum(form.yearlyPremium)
+            : parseNum(form.monthlyPremium)) > 0 && (
+            <p style={{ fontSize: '13px', color: '#9CA3AF', marginTop: '8px' }}>
+              {form.premiumMode === 'yearly'
+                ? `≈ S$${Math.round((parseNum(form.yearlyPremium) ?? 0) / 12).toLocaleString('en-SG')} / month`
+                : `≈ S$${((parseNum(form.monthlyPremium) ?? 0) * 12).toLocaleString('en-SG')} / year`
+              }
+            </p>
+          )}
+        </>
+      )
+
+      case 6: return (
+        <>
+          <label style={s.label}>What concerns you most about your coverage?</label>
+          <p style={s.hint}>Optional — helps us personalise your results.</p>
+          <div style={s.optionGrid}>
+            {[
+              { value: 'overpaying',   label: 'I might be paying too much' },
+              { value: 'undercovered', label: "I might not be covered enough" },
+              { value: 'unsure',       label: "I'm not sure what I have" },
+              { value: 'curious',      label: 'Just curious' },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                style={s.option(form.primaryConcern === opt.value)}
+                onClick={() => set('primaryConcern', opt.value)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )
+
+      default: return null
+    }
+  }
+
+  // ── Render ──────────────────────────────────────────────────────────────────
+
+  const isLastStep = step === TOTAL_STEPS
+  const isOptional = step === 5 || step === 6
+  const disabled = !canProceed() && !isOptional
+
+  return (
+    <div style={s.page}>
+
+      <div style={s.header}>
+        <div style={s.topRow}>
+          <button style={s.backBtn} onClick={back} aria-label="Go back">←</button>
+          <span style={s.logo}>InsureCheck</span>
+          <span style={{ marginLeft: 'auto', ...s.stepLabel, marginBottom: 0 }}>
+            {step} of {TOTAL_STEPS}
+          </span>
+        </div>
+        <div style={s.progressTrack}>
+          <div style={s.progressFill(progress)} />
+        </div>
+      </div>
+
+      <div style={{
+  ...s.card,
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  marginTop: '24px',
+  width: 'calc(100% - 32px)',
+}}>
+        {renderStep()}
+
+        <button
+          style={s.nextBtn(disabled)}
+          onClick={next}
+          disabled={disabled}
+        >
+          {isLastStep ? 'Get my score →' : 'Next →'}
+        </button>
+
+        {isOptional && (
+          <button style={s.skipLink} onClick={next}>
+            Skip this question
+          </button>
+        )}
+      </div>
+
+      <p style={s.privacyNote}>Your answers stay on your device and are never stored.</p>
+    </div>
+  )
+}
