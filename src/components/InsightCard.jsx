@@ -128,38 +128,18 @@ export default function InsightCard({ card, index = 0, onCTA }) {
         </p>
 
         {card.action && (
-          <p
-            style={{
-              margin: "0 0 12px",
-              fontFamily: "'DM Sans', system-ui, sans-serif",
-              fontSize: "13px",
-              color: "#6B7280",
-              lineHeight: "1.5",
-            }}
-          >
-            {card.action}
-          </p>
-        )}
-
-        <button
-          onClick={() => onCTA?.(card.id)}
-          style={{
-            padding: style.ctaVariant === "filled" ? "8px 16px" : "6px 0",
-            borderRadius: style.ctaVariant === "filled" ? "8px" : "0",
-            background: style.ctaVariant === "filled" ? style.ctaColor : "transparent",
-            color: style.ctaVariant === "filled" ? "#fff" : style.ctaColor,
-            border: style.ctaVariant === "filled" ? "none" : "none",
-            fontFamily: "'DM Sans', system-ui, sans-serif",
-            fontSize: "13px",
-            fontWeight: "600",
-            cursor: "pointer",
-            letterSpacing: "0.01em",
-            textDecoration: style.ctaVariant === "ghost" ? "underline" : "none",
-            textDecorationColor: style.ctaVariant === "ghost" ? `${style.ctaColor}60` : "none",
-          }}
-        >
-          {card.cta}
-        </button>
+  <p
+    style={{
+      margin: '0',
+      fontFamily: "'DM Sans', system-ui, sans-serif",
+      fontSize: '13px',
+      color: '#6B7280',
+      lineHeight: '1.5',
+    }}
+  >
+    {card.action}
+  </p>
+)}
       </div>
     </div>
   );

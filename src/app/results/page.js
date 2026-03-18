@@ -263,22 +263,43 @@ export default function ResultsPage() {
             Talk to an advisor
           </button>
           <button
-            onClick={() => router.push('/check')}
-            style={{
-              width: '100%',
-              padding: '15px',
-              background: 'transparent',
-              color: 'var(--color-primary)',
-              border: '2px solid var(--color-primary)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              fontFamily: 'var(--font-body)',
-            }}
-          >
-            Update my score
-          </button>
+  onClick={() => router.push('/check')}
+  style={{
+    width: '100%',
+    padding: '15px',
+    background: 'transparent',
+    color: 'var(--color-primary)',
+    border: '2px solid var(--color-primary)',
+    borderRadius: 'var(--radius-md)',
+    fontSize: '16px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    fontFamily: 'var(--font-body)',
+  }}
+>
+  Update my score
+</button>
+
+<button
+  onClick={() => {
+    sessionStorage.removeItem('iga_inputs')
+    sessionStorage.removeItem('iga_result')
+    router.push('/check')
+  }}
+  style={{
+    background: 'none',
+    border: 'none',
+    color: '#9CA3AF',
+    fontSize: '14px',
+    cursor: 'pointer',
+    padding: '8px 0',
+    fontFamily: 'var(--font-body)',
+    textDecoration: 'underline',
+    textDecorationColor: '#D1D5DB',
+  }}
+>
+  Start over with a fresh form
+</button>
           <button
             onClick={() => {
               const text = `My Insurance Score: ${result.finalScore}/100 — ${result.band.label}. How covered are you? Check yours at InsureCheck.`
