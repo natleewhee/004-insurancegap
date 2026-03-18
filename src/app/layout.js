@@ -1,5 +1,6 @@
 import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import './globals.css'
+import { Analytics } from '@vercel/analytics/next'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${dmSans.variable} ${dmSerif.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   )
