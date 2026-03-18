@@ -1,6 +1,10 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 export default function LandingPage() {
+  const router = useRouter()
+
   return (
     <main style={{
       minHeight: '100vh',
@@ -28,7 +32,7 @@ export default function LandingPage() {
           fontSize: '14px',
           color: 'var(--color-primary)',
           textDecoration: 'none',
-          opacity: 0.7,
+          opacity: 0.6,
         }}>
           How it works
         </a>
@@ -36,28 +40,27 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section style={{
-        padding: '72px 24px 64px',
+        padding: '72px 24px 56px',
         maxWidth: '560px',
         margin: '0 auto',
         textAlign: 'center',
       }}>
         <h1 style={{
           fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(32px, 6vw, 48px)',
+          fontSize: 'clamp(30px, 6vw, 46px)',
           color: 'var(--color-primary)',
           lineHeight: 1.2,
-          margin: '0 0 20px',
+          margin: '0 0 16px',
         }}>
-          Find out if you're truly protected.
+          You probably have insurance. But do you actually know what it covers?
         </h1>
         <p style={{
           fontSize: '17px',
           color: '#6B7280',
           lineHeight: 1.7,
-          margin: '0 0 36px',
+          margin: '0 0 32px',
         }}>
-          Get your Insurance Score in under 3 minutes —
-          no agent, no sales pitch, no personal data stored.
+          InsureCheck scores your coverage in 3 minutes — free, neutral, no agent involved.
         </p>
         <a href="/check" style={{
           display: 'inline-block',
@@ -70,7 +73,7 @@ export default function LandingPage() {
           textDecoration: 'none',
           letterSpacing: '0.01em',
         }}>
-          Get my score →
+          Check my score — it's free
         </a>
 
         {/* Trust badges */}
@@ -78,10 +81,14 @@ export default function LandingPage() {
           marginTop: '20px',
           display: 'flex',
           justifyContent: 'center',
-          gap: '20px',
+          gap: '16px',
           flexWrap: 'wrap',
         }}>
-          {['Educational only', 'No data stored', 'Free'].map(badge => (
+          {[
+            'No sign-up',
+            'No data stored',
+            'Not affiliated with any insurer',
+          ].map(badge => (
             <span key={badge} style={{
               fontSize: '12px',
               color: '#9CA3AF',
@@ -89,10 +96,31 @@ export default function LandingPage() {
               alignItems: 'center',
               gap: '4px',
             }}>
-              <span style={{ color: 'var(--color-accent)' }}>✓</span> {badge}
+              <span style={{ color: 'var(--color-accent)', fontWeight: '700' }}>✓</span> {badge}
             </span>
           ))}
         </div>
+      </section>
+
+      {/* Social proof provocation */}
+      <section style={{
+        padding: '20px 24px 32px',
+        textAlign: 'center',
+        maxWidth: '480px',
+        margin: '0 auto',
+      }}>
+        <p style={{
+          fontSize: '15px',
+          color: '#6B7280',
+          lineHeight: 1.6,
+          margin: 0,
+          fontStyle: 'italic',
+          borderLeft: '3px solid var(--color-accent)',
+          paddingLeft: '16px',
+          textAlign: 'left',
+        }}>
+          1 in 3 Singaporeans are underinsured without knowing it. Are you one of them?
+        </p>
       </section>
 
       {/* How it works */}
@@ -102,25 +130,33 @@ export default function LandingPage() {
         borderTop: '1px solid var(--color-border)',
         borderBottom: '1px solid var(--color-border)',
       }}>
-        <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '520px', margin: '0 auto' }}>
           <h2 style={{
             fontFamily: 'var(--font-display)',
-            fontSize: '24px',
+            fontSize: '26px',
             color: 'var(--color-primary)',
             textAlign: 'center',
             margin: '0 0 36px',
           }}>
             How it works
           </h2>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px',
-          }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
             {[
-              { step: '1', title: 'Answer 5 questions', body: 'Tell us about your current coverage — hospitalisation, CI, life, and what you pay.' },
-              { step: '2', title: 'Get your Insurance Score', body: 'We benchmark your coverage against Singapore financial planning guidelines.' },
-              { step: '3', title: 'Know your gaps', body: 'See exactly where you\'re underprotected, overpaying, or well covered.' },
+              {
+                step: '1',
+                title: 'Tell us what you have',
+                body: '5 quick questions about your policies. Takes under 3 minutes.',
+              },
+              {
+                step: '2',
+                title: 'We run the numbers',
+                body: 'Your coverage is benchmarked against Singapore financial planning standards — not a generic template.',
+              },
+              {
+                step: '3',
+                title: 'See exactly where you stand',
+                body: 'Gaps, overpayment, and what to do next — laid out clearly, without the sales pitch.',
+              },
             ].map(({ step, title, body }) => (
               <div key={step} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                 <div style={{
@@ -139,8 +175,22 @@ export default function LandingPage() {
                   {step}
                 </div>
                 <div>
-                  <p style={{ margin: '0 0 4px', fontWeight: '600', color: 'var(--color-primary)', fontSize: '15px' }}>{title}</p>
-                  <p style={{ margin: 0, color: '#6B7280', fontSize: '14px', lineHeight: 1.6 }}>{body}</p>
+                  <p style={{
+                    margin: '0 0 4px',
+                    fontWeight: '600',
+                    color: 'var(--color-primary)',
+                    fontSize: '15px',
+                  }}>
+                    {title}
+                  </p>
+                  <p style={{
+                    margin: 0,
+                    color: '#6B7280',
+                    fontSize: '14px',
+                    lineHeight: 1.6,
+                  }}>
+                    {body}
+                  </p>
                 </div>
               </div>
             ))}
@@ -155,10 +205,15 @@ export default function LandingPage() {
           fontSize: '22px',
           color: 'var(--color-primary)',
           margin: '0 0 8px',
+          lineHeight: 1.3,
         }}>
-          Built for Singaporeans who want clarity, not another sales call.
+          Know before you buy. Check before you commit.
         </p>
-        <p style={{ color: '#9CA3AF', fontSize: '14px', margin: '0 0 28px' }}>
+        <p style={{
+          color: '#9CA3AF',
+          fontSize: '14px',
+          margin: '0 0 28px',
+        }}>
           Takes 3 minutes. No sign-up required.
         </p>
         <a href="/check" style={{
@@ -171,7 +226,7 @@ export default function LandingPage() {
           fontWeight: '600',
           textDecoration: 'none',
         }}>
-          Check your score
+          Check my score — free
         </a>
       </section>
 
@@ -181,8 +236,16 @@ export default function LandingPage() {
         borderTop: '1px solid var(--color-border)',
         textAlign: 'center',
       }}>
-        <p style={{ fontSize: '12px', color: '#9CA3AF', margin: 0, lineHeight: 1.6 }}>
+        <p style={{
+          fontSize: '12px',
+          color: '#9CA3AF',
+          margin: '0 0 6px',
+          lineHeight: 1.6,
+        }}>
           This tool is for educational purposes only and does not constitute financial advice.
+          Coverage benchmarks are based on general Singapore financial planning guidelines.
+        </p>
+        <p style={{ fontSize: '12px', color: '#9CA3AF', margin: 0 }}>
           Not affiliated with any insurer or MAS-licensed entity.
         </p>
       </footer>

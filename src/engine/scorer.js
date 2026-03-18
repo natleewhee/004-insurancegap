@@ -307,10 +307,9 @@ export function generateInsights(result) {
         ? "You're not sure about your hospitalisation cover"
         : "You have no hospitalisation cover",
       body: hosp.isUnsure
-        ? "You may be covered under MediShield Life (all Singapore Citizens and PRs are). Check if you have an Integrated Shield Plan on top — it significantly increases your coverage for private or restructured hospital wards."
-        : "A single hospitalisation event without insurance can cost $10,000–$50,000 or more. This is your most urgent gap to close.",
-      action: "Integrated Shield Plans start from ~$200–400/year. Talk to a licensed advisor to find the right tier for your needs.",
-      cta: 'Talk to an advisor',
+        ? "You may already be covered under MediShield Life — all Singapore Citizens and PRs are enrolled automatically. What matters is whether you have an Integrated Shield Plan on top, which covers private or restructured hospital wards. Check your CPF statement or your insurer's app under 'Active Policies'."
+        : "A single hospitalisation without insurance can cost $10,000–$50,000 or more out of pocket. This is your most urgent gap to close before anything else.",
+      action: "Integrated Shield Plans start from around $200–400 a year for someone in their 20s or 30s — roughly the cost of one night in a B1 ward without cover. One conversation with a licensed adviser is all it takes to get this sorted.",
     });
   }
 
@@ -331,10 +330,11 @@ export function generateInsights(result) {
         ? "Your critical illness cover may not be enough"
         : "You have no critical illness coverage",
       body: hasAnyCi
-        ? `Your CI cover of ${prefix}${currentAmount} is below the recommended 4× your income (${targetAmount}). A critical illness can stop your income for months — your cover should bridge that gap.`
-        : `Without CI cover, a serious diagnosis like cancer or a stroke means your savings take the full hit of lost income and treatment costs. The recommended cover is 4× your annual income (${targetAmount}).`,
-      action: "Consider a term CI rider or a standalone CI plan to close this gap.",
-      cta: 'Talk to an advisor',
+        ? `Your CI cover of ${prefix}${currentAmount} is below the recommended 4× your income (${targetAmount}). A serious diagnosis like cancer or a stroke can stop your income for months — your cover needs to bridge that gap, not just pay for the first week of treatment.`
+        : `Without CI cover, a serious diagnosis means your savings take the full hit — lost income, treatment costs, and everything in between. The recommended cover is 4× your annual income (${targetAmount}).`,
+      action: hasAnyCi
+        ? "A CI top-up rider can often be added to your existing plan — usually cheaper than a new standalone policy. Ask an adviser to check if your current plan allows it."
+        : "A standalone term CI plan is usually the most cost-efficient starting point. An adviser can compare options based on your age and health profile.",
     });
   }
 
@@ -345,9 +345,8 @@ export function generateInsights(result) {
       priority: 3,
       severity: 'info',
       title: "Your CI only covers late-stage illness",
-      body: "Standard CI policies pay out at late-stage diagnosis. Early Critical Illness (ECI) cover pays out earlier — at a minor heart attack, early-stage cancer, or initial stroke — when treatment is most intensive and costly.",
-      action: "Many insurers offer ECI as a rider on existing CI plans. Ask your advisor if you can add it without replacing your current policy.",
-      cta: 'Learn about ECI',
+      body: "Standard CI policies pay out at late-stage diagnosis — confirmed heart failure, late-stage cancer, and so on. Early Critical Illness (ECI) cover pays out earlier, at a minor heart attack, early-stage cancer, or initial stroke, when treatment is most intensive and costs are at their highest.",
+      action: "ECI isn't usually a separate policy — it's a rider you can add to your existing CI plan. It takes one conversation with your adviser to check if yours allows it, and what it would cost.",
     });
   }
 
@@ -363,12 +362,11 @@ export function generateInsights(result) {
       severity: life.score === 0 ? 'warning' : 'info',
       title: life.score === 0
         ? "You have no life or TPD coverage"
-        : "Your life / TPD coverage has room to grow",
+        : "Your life and TPD coverage has room to grow",
       body: life.score === 0
-        ? `Life and TPD coverage protects those who depend on your income. The recommended cover is 9× your annual income (${targetAmount}).`
-        : `Your life/TPD cover of ${prefix}${currentAmount} covers ${life.multiple.toFixed(1)}× your income. The benchmark is 9× (${targetAmount}).`,
-      action: "Term life insurance is the most cost-efficient way to close this gap.",
-      cta: 'Talk to an advisor',
+        ? `Life and TPD cover protects the people who depend on your income. Without it, a permanent disability or death leaves them financially exposed. The recommended starting point is 9× your annual income (${targetAmount}).`
+        : `Your life and TPD cover of ${prefix}${currentAmount} covers ${life.multiple.toFixed(1)}× your income. The benchmark is 9× (${targetAmount}). Term life insurance is usually the most cost-efficient way to close the gap.`,
+      action: "Term life insurance is the most straightforward and affordable way to get meaningful life and TPD cover. Premiums are significantly lower the younger and healthier you are when you start.",
     });
   }
 
@@ -380,23 +378,20 @@ export function generateInsights(result) {
       priority: 4,
       severity: 'info',
       title: "Your premiums may be higher than needed",
-      body: `You're spending ${pct}% of your annual income on insurance premiums. The general guideline is under 10–15%. This could mean you're over-insured in some areas, or holding expensive whole-life or ILP policies where term alternatives exist.`,
-      action: "A policy review can identify where you're paying for coverage you don't need.",
-      cta: 'Talk to an advisor',
+      body: `You're spending ${pct}% of your annual income on insurance premiums. The general guideline is under 10–15%. This could mean you're holding expensive whole-life or investment-linked policies where a term equivalent would give you the same cover for less — freeing up cash for other financial goals.`,
+      action: "A policy review can identify where you're paying for coverage you don't need, or where a cheaper structure gives you the same protection. This is worth doing before your next renewal.",
     });
   }
 
   // --- P4c: Band input nudge ---
-  const hasAnyBand = result.isEstimated;
-  if (hasAnyBand && cards.length < 4) {
+  if (result.isEstimated && cards.length < 4) {
     cards.push({
       id: 'band-nudge',
       priority: 5,
       severity: 'nudge',
       title: "Your score is an estimate",
-      body: "You used approximate ranges for some coverage amounts. Check your policy documents for your exact sum assured, then return to update your score — it takes under a minute.",
-      action: null,
-      cta: 'Update my score',
+      body: "You used approximate ranges for some of your coverage amounts. Your actual score may be higher or lower. Check your policy documents or your insurer's app for your exact sum assured — it's usually listed under 'Policy Details' or 'Coverage Summary'.",
+      action: "Return and update your score with exact figures. It takes under a minute and gives you a more accurate picture.",
     });
   }
 

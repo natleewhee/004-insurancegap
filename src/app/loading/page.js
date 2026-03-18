@@ -15,11 +15,23 @@ export default function LoadingPage() {
   const [msgIndex, setMsgIndex] = useState(0)
 
   useEffect(() => {
-    // Run scoring immediately
     try {
       const raw = sessionStorage.getItem('iga_inputs')
       if (!raw) { router.push('/check'); return }
       const inputs = JSON.parse(raw)
+  
+      // Save previous score before overwriting
+      try {
+        const prevRaw = sessionStorage.getItem('iga_result')
+        if (prevRaw) {
+          const prev = JSON.parse(prevRaw)
+          const prevScore = prev?.result?.finalScore
+          if (typeof prevScore === 'number') {
+            sessionStorage.setItem('iga_prev_score', String(prevScore))
+          }
+        }
+      } catch {}
+  
       const result = calculateScore(inputs)
       const insights = generateInsights(result)
       sessionStorage.setItem('iga_result', JSON.stringify({ result, insights }))

@@ -345,7 +345,18 @@ function BandSelector({ options, value, onChange }) {
 }
 
 function ECITooltip() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(() => {
+    try {
+      const seen = sessionStorage.getItem('iga_eci_seen')
+      return !seen
+    } catch { return true }
+  })
+
+  function handleToggle() {
+    setOpen(o => !o)
+    try { sessionStorage.setItem('iga_eci_seen', '1') } catch {}
+  }
+
   return (
     <div style={{ marginBottom: '12px' }}>
       <button
@@ -354,7 +365,7 @@ function ECITooltip() {
           color: 'var(--color-blue)',
           textDecorationColor: 'var(--color-blue)',
         }}
-        onClick={() => setOpen(o => !o)}
+        onClick={handleToggle}
       >
         {open ? '▾' : '▸'} What is Early Critical Illness (ECI)?
       </button>
@@ -423,7 +434,7 @@ export default function CheckPage() {
 
   useEffect(() => {
     try {
-      const saved = sessionStorage.getItem('iga_inputs')
+      const saved = sessionStorage.getItem('iga_recheck')
       if (saved) {
         const parsed = JSON.parse(saved)
         setForm({
@@ -447,10 +458,10 @@ export default function CheckPage() {
           premiumMode: parsed.premiumMode ?? 'monthly',
           primaryConcern: parsed.primaryConcern ?? null,
         })
+        // Clear after reading so refresh gives a blank form
+        sessionStorage.removeItem('iga_recheck')
       }
-    } catch {
-      // sessionStorage unavailable — start fresh
-    }
+    } catch {}
     setMounted(true)
   }, [])
 
@@ -487,7 +498,6 @@ export default function CheckPage() {
   }
 
   function next() {
-    sessionStorage.setItem('iga_inputs', JSON.stringify(buildInputs()))
     if (step < TOTAL_STEPS) setStep(s => s + 1)
     else handleSubmit()
   }
@@ -551,10 +561,21 @@ export default function CheckPage() {
             <strong>60k</strong> for $60,000 or <strong>1.2m</strong> for $1,200,000.
           </p>
           <AmountInput
-            value={form.annualIncome}
-            onChange={v => set('annualIncome', v)}
-            placeholder="e.g. 60k"
-          />
+  value={form.annualIncome}
+  onChange={v => set('annualIncome', v)}
+  placeholder="e.g. 60k"
+/>
+<p style={{
+  fontSize: '12px',
+  color: '#9CA3AF',
+  margin: '8px 0 0',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+}}>
+  <span style={{ color: 'var(--color-accent)' }}>✓</span>
+  Your income is never stored or shared.
+</p>
         </>
       )
 
@@ -566,19 +587,33 @@ export default function CheckPage() {
             (AIA, Prudential, NTUC, etc.).
           </p>
           <div style={s.optionGrid}>
-            {[
-              { value: 'yes',    label: "Yes, I'm covered" },
-              { value: 'no',     label: "No, I don't have any" },
-              { value: 'unsure', label: 'Not sure' },
-            ].map(opt => (
-              <button
-                key={opt.value}
-                style={s.option(form.hasHosp === opt.value)}
-                onClick={() => set('hasHosp', opt.value)}
-              >
-                {opt.label}
-              </button>
-            ))}
+          {[
+  { value: 'yes',    label: "Yes, I'm covered",      sub: null },
+  { value: 'no',     label: "No, I don't have any",  sub: null },
+  { value: 'unsure', label: 'Not sure',               sub: 'All S\'pore Citizens & PRs have MediShield Life. Check if you have an Integrated Shield Plan on top.' },
+].map(opt => (
+  <button
+    key={opt.value}
+    style={s.option(form.hasHosp === opt.value)}
+    onClick={() => set('hasHosp', opt.value)}
+  >
+    <span style={{ display: 'block', fontWeight: form.hasHosp === opt.value ? '600' : '400' }}>
+      {opt.label}
+    </span>
+    {opt.sub && (
+      <span style={{
+        display: 'block',
+        fontSize: '12px',
+        fontWeight: '400',
+        color: form.hasHosp === opt.value ? 'var(--color-accent)' : '#9CA3AF',
+        marginTop: '4px',
+        lineHeight: 1.4,
+      }}>
+        {opt.sub}
+      </span>
+    )}
+  </button>
+))}
           </div>
         </>
       )
@@ -801,8 +836,8 @@ export default function CheckPage() {
 
       case 6: return (
         <>
-          <label style={s.label}>What concerns you most about your coverage?</label>
-          <p style={s.hint}>Optional — helps us personalise your results.</p>
+<label style={s.label}>One last thing — what's on your mind?</label>
+<p style={s.hint}>Optional — helps us show you the most relevant insights first.</p>
           <div style={s.optionGrid}>
             {[
               { value: 'overpaying',   label: 'I might be paying too much' },
@@ -872,7 +907,18 @@ export default function CheckPage() {
         )}
       </div>
 
-      <p style={s.privacyNote}>Your answers stay on your device and are never stored.</p>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+  <p style={{ ...s.privacyNote, marginBottom: '4px' }}>
+    Your answers stay on your device and are never stored.
+  </p>
+  <p style={{
+    fontSize: '11px',
+    color: '#C4C9D4',
+    margin: 0,
+  }}>
+    Educational tool only · Not affiliated with any insurer or MAS-licensed entity
+  </p>
+</div>
     </div>
   )
 }
