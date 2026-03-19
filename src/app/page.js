@@ -12,6 +12,34 @@ export default function LandingPage() {
       fontFamily: 'var(--font-body)',
     }}>
 
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "InsureCheck",
+            "url": "https://sginsurecheck.vercel.app",
+            "description": "Free insurance coverage checker for Singaporeans. Get your Insurance Score in 3 minutes.",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "SGD"
+            },
+            "audience": {
+              "@type": "Audience",
+              "geographicArea": {
+                "@type": "Country",
+                "name": "Singapore"
+              }
+            }
+          })
+        }}
+      />
+
       {/* Nav */}
       <nav style={{
         padding: '20px 24px',
@@ -45,7 +73,24 @@ export default function LandingPage() {
         margin: '0 auto',
         textAlign: 'center',
       }}>
+
+        {/* Visually hidden SEO heading */}
         <h1 style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: 0,
+          margin: '-1px',
+          overflow: 'hidden',
+          clip: 'rect(0,0,0,0)',
+          whiteSpace: 'nowrap',
+          borderWidth: 0,
+        }}>
+          Free Insurance Coverage Checker Singapore — InsureCheck
+        </h1>
+
+        {/* Visual headline */}
+        <h2 style={{
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(30px, 6vw, 46px)',
           color: 'var(--color-primary)',
@@ -53,7 +98,8 @@ export default function LandingPage() {
           margin: '0 0 16px',
         }}>
           You probably have insurance. But do you actually know what it covers?
-        </h1>
+        </h2>
+
         <p style={{
           fontSize: '17px',
           color: '#6B7280',
@@ -62,6 +108,7 @@ export default function LandingPage() {
         }}>
           InsureCheck scores your coverage in 3 minutes — free, neutral, no agent involved.
         </p>
+
         <a href="/check" style={{
           display: 'inline-block',
           padding: '16px 40px',
@@ -245,9 +292,11 @@ export default function LandingPage() {
           This tool is for educational purposes only and does not constitute financial advice.
           Coverage benchmarks are based on general Singapore financial planning guidelines.
         </p>
-        <p style={{ fontSize: '12px', color: '#9CA3AF', margin: 0 }}>
+        <p style={{ fontSize: '12px', color: '#9CA3AF', margin: '0 0 8px' }}>
           Not affiliated with any insurer or MAS-licensed entity.
         </p>
+        
+        <a href="/how-it-works" style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none' }}>{'How we calculate your score \u2192'}</a>
       </footer>
 
     </main>
