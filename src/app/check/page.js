@@ -231,6 +231,33 @@ const s = {
     textTransform: 'uppercase',
     marginBottom: '10px',
   },
+  toggle: {
+    display: 'flex',
+    background: '#F3F4F6',
+    borderRadius: 'var(--radius-md)',
+    padding: '4px',
+    marginBottom: '16px',
+    gap: '4px',
+  },
+  toggleBtn: (active) => ({
+    flex: 1,
+    padding: '8px',
+    borderRadius: '8px',
+    border: 'none',
+    background: active ? '#fff' : 'transparent',
+    color: active ? 'var(--color-primary)' : '#9CA3AF',
+    fontWeight: active ? '600' : '400',
+    fontSize: '14px',
+    cursor: 'pointer',
+    fontFamily: 'var(--font-body)',
+    boxShadow: active ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+    transition: 'all 0.15s ease',
+  }),
+  convertedAmount: {
+    fontSize: '13px',
+    color: '#9CA3AF',
+    marginTop: '8px',
+  },
 }
 
 // ─── Initial form state ───────────────────────────────────────────────────────
@@ -238,6 +265,8 @@ const s = {
 const INITIAL = {
   age: '',
   annualIncome: '',
+  yearlyIncome: '',
+  incomeMode: 'annual',
   hasHosp: null,
   hasCI: null,
   ciAmount: '',
@@ -263,6 +292,12 @@ function parseNum(val) {
   if (val === null || val === undefined || val === '') return null
   const n = parseInt(String(val).replace(/,/g, ''), 10)
   return isNaN(n) ? null : n
+}
+
+function fmtAmount(n) {
+  if (!n || n <= 0) return null
+  if (n >= 1000000) return `S$${(n / 1000000).toFixed(1)}m`
+  return `S$${(n / 1000).toFixed(0)}k`
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -383,45 +418,6 @@ function ECITooltip() {
   )
 }
 
-function PremiumModeToggle({ mode, onChange }) {
-  return (
-    <div style={{
-      display: 'flex',
-      background: '#F3F4F6',
-      borderRadius: 'var(--radius-md)',
-      padding: '4px',
-      marginBottom: '16px',
-      gap: '4px',
-    }}>
-      {[
-        { value: 'monthly', label: 'Monthly' },
-        { value: 'yearly',  label: 'Yearly' },
-      ].map(tab => (
-        <button
-          key={tab.value}
-          onClick={() => onChange(tab.value)}
-          style={{
-            flex: 1,
-            padding: '8px',
-            borderRadius: '8px',
-            border: 'none',
-            background: mode === tab.value ? '#fff' : 'transparent',
-            color: mode === tab.value ? 'var(--color-primary)' : '#9CA3AF',
-            fontWeight: mode === tab.value ? '600' : '400',
-            fontSize: '14px',
-            cursor: 'pointer',
-            fontFamily: 'var(--font-body)',
-            boxShadow: mode === tab.value ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-            transition: 'all 0.15s ease',
-          }}
-        >
-          {tab.label}
-        </button>
-      ))}
-    </div>
-  )
-}
-
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 const TOTAL_STEPS = 6
@@ -440,6 +436,8 @@ export default function CheckPage() {
         setForm({
           age: parsed.age ?? '',
           annualIncome: parsed.annualIncome ?? '',
+          yearlyIncome: parsed.yearlyIncome ?? '',
+          incomeMode: parsed.incomeMode ?? 'annual',
           hasHosp: parsed.hasHosp ?? null,
           hasCI: parsed.hasCI ?? null,
           ciAmount: parsed.ciAmount ?? '',
@@ -458,7 +456,6 @@ export default function CheckPage() {
           premiumMode: parsed.premiumMode ?? 'monthly',
           primaryConcern: parsed.primaryConcern ?? null,
         })
-        // Clear after reading so refresh gives a blank form
         sessionStorage.removeItem('iga_recheck')
       }
     } catch {}
@@ -469,11 +466,66 @@ export default function CheckPage() {
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }))
   const progress = (step / TOTAL_STEPS) * 100
+  const inc = parseNum(form.annualIncome)
+
+  // Dynamic band options based on income
+  function ciBands() {
+    if (inc && inc > 0) {
+      const low  = Math.round(inc * 2)
+      const high = Math.round(inc * 5)
+      return [
+        { value: 'low',     label: `Less than ${fmtAmount(low)}` },
+        { value: 'partial', label: `${fmtAmount(low)} – ${fmtAmount(high)}` },
+        { value: 'high',    label: `More than ${fmtAmount(high)}` },
+      ]
+    }
+    return [
+      { value: 'low',     label: 'Less than S$100k' },
+      { value: 'partial', label: 'S$100k – S$300k' },
+      { value: 'high',    label: 'More than S$300k' },
+    ]
+  }
+
+  function eciBands() {
+    if (inc && inc > 0) {
+      const low = Math.round(inc * 0.8)
+      const mid = Math.round(inc * 1.5)
+      return [
+        { value: 'low',  label: `Less than ${fmtAmount(low)}` },
+        { value: 'mid',  label: `${fmtAmount(low)} – ${fmtAmount(mid)}` },
+        { value: 'high', label: `More than ${fmtAmount(mid)}` },
+      ]
+    }
+    return [
+      { value: 'low',  label: 'Less than S$50k' },
+      { value: 'mid',  label: 'S$50k – S$100k' },
+      { value: 'high', label: 'More than S$100k' },
+    ]
+  }
+
+  function lifeBands() {
+    if (inc && inc > 0) {
+      const low  = Math.round(inc * 5)
+      const high = Math.round(inc * 9)
+      return [
+        { value: 'low',     label: `Less than ${fmtAmount(low)}` },
+        { value: 'partial', label: `${fmtAmount(low)} – ${fmtAmount(high)}` },
+        { value: 'high',    label: `More than ${fmtAmount(high)}` },
+      ]
+    }
+    return [
+      { value: 'low',     label: 'Less than S$450k' },
+      { value: 'partial', label: 'S$450k – S$810k' },
+      { value: 'high',    label: 'More than S$810k' },
+    ]
+  }
 
   function buildInputs() {
     return {
       age: parseInt(form.age) || null,
       annualIncome: parseNum(form.annualIncome),
+      yearlyIncome: parseNum(form.yearlyIncome),
+      incomeMode: form.incomeMode,
       hasHosp: form.hasHosp,
       hasCI: form.hasCI,
       ciAmount: form.ciUseBand ? null : parseNum(form.ciAmount),
@@ -555,27 +607,76 @@ export default function CheckPage() {
 
           <hr style={s.divider} />
 
-          <label style={s.label}>What is your annual income?</label>
+          <label style={s.label}>What is your income?</label>
           <p style={s.hint}>
-            Your gross annual salary in SGD. Tip: type{' '}
-            <strong>60k</strong> for $60,000 or <strong>1.2m</strong> for $1,200,000.
+            Your gross salary in SGD. Tip: type <strong>60k</strong> for $60,000
+            or <strong>1.2m</strong> for $1,200,000.
           </p>
+
+          {/* Annual / Monthly toggle */}
+          <div style={s.toggle}>
+            {[
+              { value: 'annual',  label: 'Annual' },
+              { value: 'monthly', label: 'Monthly' },
+            ].map(tab => (
+              <button
+                key={tab.value}
+                onClick={() => {
+                  const mode = tab.value
+                  set('incomeMode', mode)
+                  if (mode === 'monthly' && form.annualIncome) {
+                    const monthly = Math.round(parseNum(form.annualIncome) / 12)
+                    set('yearlyIncome', form.annualIncome)
+                    set('annualIncome', monthly)
+                  }
+                  if (mode === 'annual' && form.yearlyIncome) {
+                    set('annualIncome', form.yearlyIncome)
+                  }
+                }}
+                style={s.toggleBtn((form.incomeMode ?? 'annual') === tab.value)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           <AmountInput
-  value={form.annualIncome}
-  onChange={v => set('annualIncome', v)}
-  placeholder="e.g. 60k"
-/>
-<p style={{
-  fontSize: '12px',
-  color: '#9CA3AF',
-  margin: '8px 0 0',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '4px',
-}}>
-  <span style={{ color: 'var(--color-accent)' }}>✓</span>
-  Your income is never stored or shared.
-</p>
+            key={form.incomeMode ?? 'annual'}
+            value={form.incomeMode === 'monthly'
+              ? (form.annualIncome ? Math.round(parseNum(form.annualIncome)) : '')
+              : form.annualIncome}
+            onChange={v => {
+              if (form.incomeMode === 'monthly') {
+                set('annualIncome', v ? v * 12 : null)
+                set('yearlyIncome', v ? v * 12 : null)
+              } else {
+                set('annualIncome', v)
+                set('yearlyIncome', v)
+              }
+            }}
+            placeholder={form.incomeMode === 'monthly' ? 'e.g. 5k' : 'e.g. 60k'}
+          />
+
+          {parseNum(form.annualIncome) > 0 && (
+            <p style={s.convertedAmount}>
+              {form.incomeMode === 'monthly'
+                ? `≈ S$${parseNum(form.annualIncome).toLocaleString('en-SG')} / year`
+                : `≈ S$${Math.round(parseNum(form.annualIncome) / 12).toLocaleString('en-SG')} / month`
+              }
+            </p>
+          )}
+
+          <p style={{
+            fontSize: '12px',
+            color: '#9CA3AF',
+            margin: '8px 0 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}>
+            <span style={{ color: 'var(--color-accent)' }}>✓</span>
+            Your income is never stored or shared.
+          </p>
         </>
       )
 
@@ -587,33 +688,33 @@ export default function CheckPage() {
             (AIA, Prudential, NTUC, etc.).
           </p>
           <div style={s.optionGrid}>
-          {[
-  { value: 'yes',    label: "Yes, I'm covered",      sub: null },
-  { value: 'no',     label: "No, I don't have any",  sub: null },
-  { value: 'unsure', label: 'Not sure',               sub: 'All S\'pore Citizens & PRs have MediShield Life. Check if you have an Integrated Shield Plan on top.' },
-].map(opt => (
-  <button
-    key={opt.value}
-    style={s.option(form.hasHosp === opt.value)}
-    onClick={() => set('hasHosp', opt.value)}
-  >
-    <span style={{ display: 'block', fontWeight: form.hasHosp === opt.value ? '600' : '400' }}>
-      {opt.label}
-    </span>
-    {opt.sub && (
-      <span style={{
-        display: 'block',
-        fontSize: '12px',
-        fontWeight: '400',
-        color: form.hasHosp === opt.value ? 'var(--color-accent)' : '#9CA3AF',
-        marginTop: '4px',
-        lineHeight: 1.4,
-      }}>
-        {opt.sub}
-      </span>
-    )}
-  </button>
-))}
+            {[
+              { value: 'yes',    label: "Yes, I'm covered",     sub: null },
+              { value: 'no',     label: "No, I don't have any", sub: null },
+              { value: 'unsure', label: 'Not sure',              sub: "All S'pore Citizens & PRs have MediShield Life. Check if you have an Integrated Shield Plan on top." },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                style={s.option(form.hasHosp === opt.value)}
+                onClick={() => set('hasHosp', opt.value)}
+              >
+                <span style={{ display: 'block', fontWeight: form.hasHosp === opt.value ? '600' : '400' }}>
+                  {opt.label}
+                </span>
+                {opt.sub && (
+                  <span style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    fontWeight: '400',
+                    color: form.hasHosp === opt.value ? 'var(--color-accent)' : '#9CA3AF',
+                    marginTop: '4px',
+                    lineHeight: 1.4,
+                  }}>
+                    {opt.sub}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
         </>
       )
@@ -657,11 +758,7 @@ export default function CheckPage() {
                   <BandSelector
                     value={form.ciBand}
                     onChange={v => set('ciBand', v)}
-                    options={[
-                      { value: 'low',     label: '< 2× income' },
-                      { value: 'partial', label: '2–4× income' },
-                      { value: 'high',    label: '> 4× income' },
-                    ]}
+                    options={ciBands()}
                   />
                   <button
                     style={s.unknownLink}
@@ -705,11 +802,7 @@ export default function CheckPage() {
                       <BandSelector
                         value={form.eciBand}
                         onChange={v => set('eciBand', v)}
-                        options={[
-                          { value: 'low',  label: '< S$50k' },
-                          { value: 'mid',  label: 'S$50–100k' },
-                          { value: 'high', label: '> S$100k' },
-                        ]}
+                        options={eciBands()}
                       />
                       <button
                         style={s.unknownLink}
@@ -765,11 +858,7 @@ export default function CheckPage() {
                   <BandSelector
                     value={form.lifeBand}
                     onChange={v => set('lifeBand', v)}
-                    options={[
-                      { value: 'low',     label: '< 5× income' },
-                      { value: 'partial', label: '5–9× income' },
-                      { value: 'high',    label: '> 9× income' },
-                    ]}
+                    options={lifeBands()}
                   />
                   <button
                     style={s.unknownLink}
@@ -792,19 +881,28 @@ export default function CheckPage() {
             Optional but improves your score accuracy.
           </p>
 
-          <PremiumModeToggle
-            mode={form.premiumMode}
-            onChange={mode => {
-              set('premiumMode', mode)
-              // Keep values in sync when switching modes
-              if (mode === 'yearly' && form.monthlyPremium) {
-                set('yearlyPremium', parseNum(form.monthlyPremium) * 12)
-              }
-              if (mode === 'monthly' && form.yearlyPremium) {
-                set('monthlyPremium', Math.round(parseNum(form.yearlyPremium) / 12))
-              }
-            }}
-          />
+          <div style={s.toggle}>
+            {[
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly',  label: 'Yearly' },
+            ].map(tab => (
+              <button
+                key={tab.value}
+                onClick={() => {
+                  set('premiumMode', tab.value)
+                  if (tab.value === 'yearly' && form.monthlyPremium) {
+                    set('yearlyPremium', parseNum(form.monthlyPremium) * 12)
+                  }
+                  if (tab.value === 'monthly' && form.yearlyPremium) {
+                    set('monthlyPremium', Math.round(parseNum(form.yearlyPremium) / 12))
+                  }
+                }}
+                style={s.toggleBtn((form.premiumMode ?? 'monthly') === tab.value)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
           <AmountInput
             key={form.premiumMode}
@@ -824,7 +922,7 @@ export default function CheckPage() {
           {(form.premiumMode === 'yearly'
             ? parseNum(form.yearlyPremium)
             : parseNum(form.monthlyPremium)) > 0 && (
-            <p style={{ fontSize: '13px', color: '#9CA3AF', marginTop: '8px' }}>
+            <p style={s.convertedAmount}>
               {form.premiumMode === 'yearly'
                 ? `≈ S$${Math.round((parseNum(form.yearlyPremium) ?? 0) / 12).toLocaleString('en-SG')} / month`
                 : `≈ S$${((parseNum(form.monthlyPremium) ?? 0) * 12).toLocaleString('en-SG')} / year`
@@ -836,8 +934,8 @@ export default function CheckPage() {
 
       case 6: return (
         <>
-<label style={s.label}>One last thing — what's on your mind?</label>
-<p style={s.hint}>Optional — helps us show you the most relevant insights first.</p>
+          <label style={s.label}>One last thing — what's on your mind?</label>
+          <p style={s.hint}>Optional — helps us show you the most relevant insights first.</p>
           <div style={s.optionGrid}>
             {[
               { value: 'overpaying',   label: 'I might be paying too much' },
@@ -884,12 +982,12 @@ export default function CheckPage() {
       </div>
 
       <div style={{
-  ...s.card,
-  marginLeft: 'auto',
-  marginRight: 'auto',
-  marginTop: '24px',
-  width: 'calc(100% - 32px)',
-}}>
+        ...s.card,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: '24px',
+        width: 'calc(100% - 32px)',
+      }}>
         {renderStep()}
 
         <button
@@ -897,7 +995,7 @@ export default function CheckPage() {
           onClick={next}
           disabled={disabled}
         >
-          {isLastStep ? 'Get my score →' : 'Next →'}
+          {isLastStep ? 'Get my score \u2192' : 'Next \u2192'}
         </button>
 
         {isOptional && (
@@ -908,17 +1006,14 @@ export default function CheckPage() {
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-  <p style={{ ...s.privacyNote, marginBottom: '4px' }}>
-    Your answers stay on your device and are never stored.
-  </p>
-  <p style={{
-    fontSize: '11px',
-    color: '#C4C9D4',
-    margin: 0,
-  }}>
-    Educational tool only · Not affiliated with any insurer or MAS-licensed entity
-  </p>
-</div>
+        <p style={{ ...s.privacyNote, marginBottom: '4px' }}>
+          Your answers stay on your device and are never stored.
+        </p>
+        <p style={{ fontSize: '11px', color: '#C4C9D4', margin: 0 }}>
+          Educational tool only · Not affiliated with any insurer or MAS-licensed entity
+        </p>
+      </div>
+
     </div>
   )
 }

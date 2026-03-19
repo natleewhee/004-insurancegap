@@ -9,8 +9,8 @@
 // ---------------------------------------------------------------------------
 
 export const BENCHMARKS = {
-  CI_ADEQUATE_MULTIPLE: 4,      // 4× annual income
-  CI_PARTIAL_MULTIPLE: 2,       // 2× annual income
+    CI_ADEQUATE_MULTIPLE: 5,      // 5× annual income — CFP needs analysis
+    CI_PARTIAL_MULTIPLE: 2,       // 2× annual income
   LIFE_ADEQUATE_MULTIPLE: 9,    // 9× annual income
   LIFE_PARTIAL_MULTIPLE: 5,     // 5× annual income
   ECI_STRONG_THRESHOLD: 100000, // $100k
@@ -21,17 +21,17 @@ export const BENCHMARKS = {
 
 export const BAND_MIDPOINTS = {
   // CI bands expressed as income multiples
-  CI_LOW: 1.0,     // "less than 2×" → assume 1×
-  CI_PARTIAL: 3.0, // "2–4×" → assume 3×
-  CI_HIGH: 5.0,    // "more than 4×" → assume 5×
+  CI_LOW:     1.0,     // "less than 2×" → assume 1×
+  CI_PARTIAL: 3.5,     // "2–5×" → assume 3.5×
+  CI_HIGH:    6.0,     // "more than 5×" → assume 6×
   // Life bands expressed as income multiples
   LIFE_LOW: 3.0,   // "less than 5×" → assume 3×
   LIFE_PARTIAL: 7.0, // "5–9×" → assume 7×
   LIFE_HIGH: 11.0, // "more than 9×" → assume 11×
-  // ECI bands in absolute SGD
-  ECI_LOW: 25000,   // "less than $50k" → assume $25k
-  ECI_MID: 75000,   // "$50–100k" → assume $75k
-  ECI_HIGH: 125000, // "more than $100k" → assume $125k
+// ECI bands as income multiples (labels are dynamic per user income)
+ECI_LOW:  0.4,   // less than 0.8× income → assume 0.4×
+ECI_MID:  1.15,  // 0.8–1.5× income → assume midpoint 1.15×
+ECI_HIGH: 2.0,   // more than 1.5× income → assume 2×
 };
 
 export const WEIGHTS = {
@@ -138,23 +138,26 @@ export function scoreCIBase(hasCI, ciAmount, ciBand, annualIncome) {
 /**
  * ECI boost (0–20 points added to CI base).
  */
-export function scoreECIBoost(hasECI, eciAmount, eciBand) {
+export function scoreECIBoost(hasECI, eciAmount, eciBand, annualIncome) {
   if (hasECI === 'no') return { boost: 0, amount: 0, isEstimated: false };
   if (hasECI === 'unsure') return { boost: 0, amount: 0, isEstimated: true };
 
   const eciBandMap = {
     none: 0,
-    low:  BAND_MIDPOINTS.ECI_LOW,
-    mid:  BAND_MIDPOINTS.ECI_MID,
-    high: BAND_MIDPOINTS.ECI_HIGH,
+    low:  BAND_MIDPOINTS.ECI_LOW  * annualIncome,
+    mid:  BAND_MIDPOINTS.ECI_MID  * annualIncome,
+    high: BAND_MIDPOINTS.ECI_HIGH * annualIncome,
   };
 
   const { amount, isEstimated } = resolveAmount(eciAmount, eciBand, eciBandMap);
 
+  const someThreshold  = annualIncome > 0 ? annualIncome * 0.8  : BENCHMARKS.ECI_SOME_THRESHOLD;
+  const strongThreshold = annualIncome > 0 ? annualIncome * 1.5 : BENCHMARKS.ECI_STRONG_THRESHOLD;
+
   let boost = 0;
-  if (amount >= BENCHMARKS.ECI_STRONG_THRESHOLD) boost = 20;
-  else if (amount >= BENCHMARKS.ECI_SOME_THRESHOLD) boost = 10;
-  else if (amount > 0) boost = 5; // has some ECI, below $50k
+  if (amount >= strongThreshold) boost = 20;
+  else if (amount >= someThreshold) boost = 10;
+  else if (amount > 0) boost = 5;
 
   return { boost, amount, isEstimated };
 }
@@ -164,7 +167,7 @@ export function scoreECIBoost(hasECI, eciAmount, eciBand) {
  */
 export function scoreResilience(hasCI, ciAmount, ciBand, hasECI, eciAmount, eciBand, annualIncome) {
   const ci  = scoreCIBase(hasCI, ciAmount, ciBand, annualIncome);
-  const eci = scoreECIBoost(hasECI, eciAmount, eciBand);
+  const eci = scoreECIBoost(hasECI, eciAmount, eciBand, annualIncome);
   const combined = roundScore(Math.min(ci.score + eci.boost, 100));
 
   return {
@@ -313,30 +316,30 @@ export function generateInsights(result) {
     });
   }
 
-  // --- P2: CI coverage gap ---
-  if (resilience.ci.score < 50) {
-    const hasAnyCi = hasCI === 'yes';
-    const targetAmount = formatSGD(BENCHMARKS.CI_ADEQUATE_MULTIPLE * annualIncome);
-    const currentAmount = hasAnyCi && resilience.ci.amount > 0
-      ? formatSGD(resilience.ci.amount)
-      : null;
-    const prefix = resilience.ci.isEstimated ? 'approximately ' : '';
+// --- P2: CI coverage gap ---
+if (resilience.ci.score < 50) {
+  const hasAnyCi = hasCI === 'yes';
+  const targetAmount = formatSGD(BENCHMARKS.CI_ADEQUATE_MULTIPLE * annualIncome);
+  const currentAmount = hasAnyCi && resilience.ci.amount > 0
+    ? formatSGD(resilience.ci.amount)
+    : null;
+  const prefix = resilience.ci.isEstimated ? 'approximately ' : '';
 
-    cards.push({
-      id: 'ci-gap',
-      priority: 2,
-      severity: 'warning',
-      title: hasAnyCi
-        ? "Your critical illness cover may not be enough"
-        : "You have no critical illness coverage",
-      body: hasAnyCi
-        ? `Your CI cover of ${prefix}${currentAmount} is below the recommended 4× your income (${targetAmount}). A serious diagnosis like cancer or a stroke can stop your income for months — your cover needs to bridge that gap, not just pay for the first week of treatment.`
-        : `Without CI cover, a serious diagnosis means your savings take the full hit — lost income, treatment costs, and everything in between. The recommended cover is 4× your annual income (${targetAmount}).`,
-      action: hasAnyCi
-        ? "A CI top-up rider can often be added to your existing plan — usually cheaper than a new standalone policy. Ask an adviser to check if your current plan allows it."
-        : "A standalone term CI plan is usually the most cost-efficient starting point. An adviser can compare options based on your age and health profile.",
-    });
-  }
+  cards.push({
+    id: 'ci-gap',
+    priority: 2,
+    severity: 'warning',
+    title: hasAnyCi
+      ? "Your critical illness cover may not be enough"
+      : "You have no critical illness coverage",
+    body: hasAnyCi
+      ? `Your CI cover of ${prefix}${currentAmount} is below the recommended 5× your income (${targetAmount}). A serious diagnosis like cancer or a stroke can stop your income for months — your cover needs to bridge that gap, not just pay for the first week of treatment.`
+      : `Without CI cover, a serious diagnosis means your savings take the full hit — lost income, treatment costs, and everything in between. The recommended cover is 5× your annual income (${targetAmount}).`,
+    action: hasAnyCi
+      ? "A CI top-up rider can often be added to your existing plan — usually cheaper than a new standalone policy. Ask an adviser to check if your current plan allows it."
+      : "A standalone term CI plan is usually the most cost-efficient starting point. An adviser can compare options based on your age and health profile.",
+  });
+}
 
   // --- P3: ECI gap (only if CI exists) ---
   if (hasCI === 'yes' && hasECI === 'no') {
