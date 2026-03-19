@@ -968,18 +968,39 @@ export default function CheckPage() {
   return (
     <div style={s.page}>
 
-      <div style={s.header}>
-        <div style={s.topRow}>
-          <button style={s.backBtn} onClick={back} aria-label="Go back">←</button>
-          <span style={s.logo}>InsureCheck</span>
-          <span style={{ marginLeft: 'auto', ...s.stepLabel, marginBottom: 0 }}>
-            {step} of {TOTAL_STEPS}
-          </span>
-        </div>
-        <div style={s.progressTrack}>
-          <div style={s.progressFill(progress)} />
-        </div>
-      </div>
+<div style={s.header}>
+  <div style={s.topRow}>
+    <button style={s.backBtn} onClick={back} aria-label="Go back">←</button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+      <span style={{
+        fontFamily: 'var(--font-coah)',
+        fontSize: '9px',
+        fontWeight: '600',
+        color: 'var(--color-coah)',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        opacity: 0.6,
+      }}>
+        Coah
+      </span>
+      <span style={s.logo}>InsureCheck</span>
+    </div>
+    <span style={{ marginLeft: 'auto', ...s.stepLabel, marginBottom: 0 }}>
+      {step} of {TOTAL_STEPS}
+    </span>
+  </div>
+  <div style={s.progressTrack}>
+    <div style={s.progressFill(progress)} />
+  </div>
+  <p style={{
+    fontSize: '11px',
+    color: '#9CA3AF',
+    margin: '8px 0 0',
+    textAlign: 'center',
+  }}>
+    Educational tool · No login required · No data sent to any server
+  </p>
+</div>
 
       <div style={{
         ...s.card,
@@ -1006,13 +1027,23 @@ export default function CheckPage() {
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <p style={{ ...s.privacyNote, marginBottom: '4px' }}>
-          Your answers stay on your device and are never stored.
-        </p>
-        <p style={{ fontSize: '11px', color: '#C4C9D4', margin: 0 }}>
-          Educational tool only · Not affiliated with any insurer or MAS-licensed entity
-        </p>
-      </div>
+  <p style={{ ...s.privacyNote, marginBottom: '4px' }}>
+    Your answers stay on your device and are never stored.
+  </p>
+  <p style={{ fontSize: '11px', color: '#C4C9D4', margin: '0 0 6px' }}>
+    Educational tool only · Not affiliated with any insurer or MAS-licensed entity
+  </p>
+  <p style={{ fontSize: '11px', color: '#C4C9D4', margin: 0 }}>
+    <span style={{
+      fontFamily: 'var(--font-coah)',
+      fontWeight: '600',
+      letterSpacing: '0.06em',
+    }}>
+      COAH
+    </span>
+    {' '}· Built for Singapore
+  </p>
+</div>
 
     </div>
   )

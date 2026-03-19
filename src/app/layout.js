@@ -15,10 +15,10 @@ const dmSerif = DM_Serif_Display({
 export const metadata = {
   metadataBase: new URL('https://sginsurecheck.vercel.app'),
   title: {
-    default: 'InsureCheck — Know if you\'re truly covered',
-    template: '%s | InsureCheck',
+    default: 'InsureCheck by Coah — Know if you\'re truly covered',
+    template: '%s | InsureCheck by Coah',
   },
-  description: 'Get your free Insurance Score in 3 minutes. InsureCheck benchmarks your coverage against Singapore financial planning guidelines — no agent, no sign-up, no sales pitch.',
+  description: 'A free Coah tool. Get your Insurance Score in 3 minutes — benchmarked against Singapore financial planning guidelines. No sign-up. No agent. No data stored.',
   keywords: [
     'insurance score Singapore',
     'am I underinsured Singapore',
@@ -45,8 +45,8 @@ export const metadata = {
     locale: 'en_SG',
     url: 'https://sginsurecheck.vercel.app',
     siteName: 'InsureCheck',
-    title: 'InsureCheck — Know if you\'re truly covered',
-    description: 'Get your free Insurance Score in 3 minutes. Benchmarked against Singapore financial planning guidelines. No agent. No sign-up. Free.',
+    title: 'InsureCheck by Coah — Know if you\'re truly covered',
+    description: 'A free Coah tool. Get your Insurance Score in 3 minutes. No agent. No sign-up. Free.',
     images: [
       {
         url: '/og-image.png',
@@ -58,8 +58,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'InsureCheck — Know if you\'re truly covered',
-    description: 'Get your free Insurance Score in 3 minutes. Benchmarked against Singapore financial planning guidelines.',
+    title: 'InsureCheck by Coah — Know if you\'re truly covered',
+    description: 'A free Coah tool. Get your Insurance Score in 3 minutes. Benchmarked against Singapore financial planning guidelines.',
     images: ['/og-image.png'],
   },
   icons: {

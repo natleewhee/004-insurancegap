@@ -55,10 +55,10 @@ function Expandable({ label, children }) {
 
 function PillarCard({ color, emoji, title, weight, summary, why, expandContent }) {
   const colors = {
-    red:   { bg: '#FCEBEB', border: '#E24B4A', text: '#A32D2D', badge: '#FCEBEB', badgeText: '#A32D2D' },
-    amber: { bg: '#FAEEDA', border: '#EF9F27', text: '#854F0B', badge: '#FAEEDA', badgeText: '#854F0B' },
-    blue:  { bg: '#E6F1FB', border: '#378ADD', text: '#185FA5', badge: '#E6F1FB', badgeText: '#185FA5' },
-    gray:  { bg: '#F1EFE8', border: '#888780', text: '#5F5E5A', badge: '#F1EFE8', badgeText: '#5F5E5A' },
+    red:   { bg: '#FCEBEB', border: '#E24B4A', badge: '#FCEBEB', badgeText: '#A32D2D' },
+    amber: { bg: '#FAEEDA', border: '#EF9F27', badge: '#FAEEDA', badgeText: '#854F0B' },
+    blue:  { bg: '#E6F1FB', border: '#378ADD', badge: '#E6F1FB', badgeText: '#185FA5' },
+    gray:  { bg: '#F1EFE8', border: '#888780', badge: '#F1EFE8', badgeText: '#5F5E5A' },
   }
   const c = colors[color] ?? colors.gray
 
@@ -66,7 +66,7 @@ function PillarCard({ color, emoji, title, weight, summary, why, expandContent }
     <div style={{
       background: 'var(--color-surface)',
       borderRadius: '14px',
-      border: `1px solid var(--color-border)`,
+      border: '1px solid var(--color-border)',
       borderTop: `3px solid ${c.border}`,
       padding: '20px',
       boxShadow: 'var(--shadow-card)',
@@ -231,9 +231,27 @@ export default function HowItWorksPage() {
         >
           ←
         </button>
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--color-primary)' }}>
-          InsureCheck
-        </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+          <span style={{
+            fontFamily: 'var(--font-coah)',
+            fontSize: '10px',
+            fontWeight: '600',
+            color: 'var(--color-coah)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            opacity: 0.7,
+          }}>
+            Coah
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '17px',
+            color: 'var(--color-primary)',
+            lineHeight: 1,
+          }}>
+            InsureCheck
+          </span>
+        </div>
       </div>
 
       <div style={{ maxWidth: '640px', margin: '0 auto', padding: '0 20px' }}>
@@ -241,6 +259,33 @@ export default function HowItWorksPage() {
         {/* ── Hero ── */}
         <Section noBorder>
           <div style={{ paddingTop: '40px', paddingBottom: '8px' }}>
+
+            {/* Coah attribution */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '16px',
+            }}>
+              <span style={{
+                fontFamily: 'var(--font-coah)',
+                fontSize: '13px',
+                fontWeight: '600',
+                color: 'var(--color-coah)',
+                letterSpacing: '0.08em',
+              }}>
+                COAH
+              </span>
+              <span style={{
+                fontSize: '12px',
+                color: '#9CA3AF',
+                borderLeft: '1px solid var(--color-border)',
+                paddingLeft: '8px',
+              }}>
+                Built for Singapore
+              </span>
+            </div>
+
             <h1 style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(26px, 5vw, 36px)',
@@ -288,10 +333,10 @@ export default function HowItWorksPage() {
           </BodyText>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {[
-              { emoji: '🏥', label: 'Hospitalisation', desc: 'Do you have cover if you need to be hospitalised? This is a yes/no gate — without it, your score is capped at 50.' },
-              { emoji: '🩺', label: 'Critical illness (CI + ECI)', desc: 'Do you have enough cover if you\'re diagnosed with cancer, a heart attack, or a stroke? Weighted at 40%.' },
-              { emoji: '🛡️', label: 'Life and TPD', desc: 'Are the people who depend on you protected if you pass away or can no longer work? Weighted at 30%.' },
-              { emoji: '💰', label: 'Premium efficiency', desc: 'Are your premiums proportionate to your income — or are you overspending? Weighted at 20%.' },
+              { emoji: '🏥', label: 'Hospitalisation', desc: "Do you have cover if you need to be hospitalised? This is a yes/no gate — without it, your score is capped at 50." },
+              { emoji: '🩺', label: 'Critical illness (CI + ECI)', desc: "Do you have enough cover if you're diagnosed with cancer, a heart attack, or a stroke? Weighted at 40%." },
+              { emoji: '🛡️', label: 'Life and TPD', desc: "Are the people who depend on you protected if you pass away or can no longer work? Weighted at 30%." },
+              { emoji: '💰', label: 'Premium efficiency', desc: "Are your premiums proportionate to your income — or are you overspending? Weighted at 20%." },
             ].map(item => (
               <div key={item.label} style={{
                 display: 'flex',
@@ -323,10 +368,10 @@ export default function HowItWorksPage() {
           </BodyText>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
-              { color: '#E24B4A', bg: '#FCEBEB', range: '0 – 39', label: 'At risk', desc: 'You have critical gaps. At least one major area of protection is missing.' },
-              { color: '#EF9F27', bg: '#FAEEDA', range: '40 – 59', label: 'Partially covered', desc: 'You have some coverage but meaningful gaps remain — worth addressing.' },
-              { color: '#378ADD', bg: '#E6F1FB', range: '60 – 79', label: 'Mostly covered', desc: 'You\'re in reasonable shape. A few areas to tighten up.' },
-              { color: '#1D9E75', bg: '#E1F5EE', range: '80 – 100', label: 'Well protected', desc: 'Your coverage meets or exceeds the key benchmarks. Well done.' },
+              { color: '#E24B4A', bg: '#FCEBEB', range: '0 – 39',   label: 'At risk',           desc: 'You have critical gaps. At least one major area of protection is missing.' },
+              { color: '#EF9F27', bg: '#FAEEDA', range: '40 – 59',  label: 'Partially covered', desc: "You have some coverage but meaningful gaps remain — worth addressing." },
+              { color: '#378ADD', bg: '#E6F1FB', range: '60 – 79',  label: 'Mostly covered',    desc: "You're in reasonable shape. A few areas to tighten up." },
+              { color: '#1D9E75', bg: '#E1F5EE', range: '80 – 100', label: 'Well protected',    desc: 'Your coverage meets or exceeds the key benchmarks. Well done.' },
             ].map(band => (
               <div key={band.range} style={{
                 display: 'flex',
@@ -388,7 +433,7 @@ export default function HowItWorksPage() {
             </p>
             {[
               { label: 'Critical illness', pct: 40, color: '#EF9F27' },
-              { label: 'Life and TPD', pct: 30, color: '#378ADD' },
+              { label: 'Life and TPD',     pct: 30, color: '#378ADD' },
               { label: 'Premium efficiency', pct: 20, color: '#888780' },
             ].map(item => (
               <div key={item.label} style={{ marginBottom: '10px' }}>
@@ -418,6 +463,52 @@ Band inputs → band midpoint used as proxy → score shown as "estimated"`}
             </Formula>
           </Expandable>
         </Section>
+
+        {/* ── Coah: Incorruptible Logic ── */}
+        <div style={{
+          marginTop: '36px',
+          padding: '20px',
+          background: 'var(--color-coah)',
+          borderRadius: '14px',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '10px',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-coah)',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#fff',
+              letterSpacing: '0.08em',
+            }}>
+              COAH
+            </span>
+            <span style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.5)',
+              borderLeft: '1px solid rgba(255,255,255,0.2)',
+              paddingLeft: '8px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}>
+              Incorruptible Logic
+            </span>
+          </div>
+          <p style={{
+            fontSize: '13px',
+            color: 'rgba(255,255,255,0.8)',
+            lineHeight: 1.7,
+            margin: 0,
+          }}>
+            InsureCheck runs on Coah's core principle: incorruptible logic.
+            Our benchmarks are based on CFP and MAS principles — not commissions,
+            not referral fees, not agent incentives. The math is on a hill for
+            everyone to see.
+          </p>
+        </div>
 
         {/* ── Pillars ── */}
         <Section title="The four pillars in detail">
@@ -621,18 +712,18 @@ At 15% or above → score: 0 (flagged as high)`}
                 title: 'Kaplan / SIM financial planning course materials',
                 desc: 'The 10–15% premium-to-income guideline used in practitioner education in Singapore.',
               },
-            ].map(s => (
-              <div key={s.title} style={{
+            ].map(item => (
+              <div key={item.title} style={{
                 padding: '12px 16px',
                 background: 'var(--color-surface)',
                 borderRadius: '10px',
                 border: '1px solid var(--color-border)',
               }}>
                 <p style={{ margin: '0 0 3px', fontWeight: '600', fontSize: '13px', color: 'var(--color-primary)' }}>
-                  {s.title}
+                  {item.title}
                 </p>
                 <p style={{ margin: 0, fontSize: '12px', color: '#6B7280', lineHeight: 1.5 }}>
-                  {s.desc}
+                  {item.desc}
                 </p>
               </div>
             ))}
@@ -646,13 +737,13 @@ At 15% or above → score: 0 (flagged as high)`}
           </BodyText>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
-              ['Dependants', 'More dependants = more life and CI cover needed. We use one benchmark for everyone.'],
-              ['Outstanding debt', 'A mortgage or large loans increase your required cover significantly.'],
-              ['Existing assets', 'Savings, CPF, and investments can partially offset your insurance needs.'],
-              ['Health history', 'Pre-existing conditions may affect what you can get and at what cost.'],
-              ['Hospitalisation tier', 'We treat all H&S cover equally — MediShield Life and a full private plan both score as "covered."'],
-              ['Policy exclusions', 'Your actual cover may be lower than your sum assured due to exclusions or conditions.'],
-              ['Medical inflation', 'Healthcare costs in Singapore rise ~8–10% a year. A sum assured that works today may not in 10 years.'],
+              ['Dependants',             'More dependants = more life and CI cover needed. We use one benchmark for everyone.'],
+              ['Outstanding debt',       'A mortgage or large loans increase your required cover significantly.'],
+              ['Existing assets',        'Savings, CPF, and investments can partially offset your insurance needs.'],
+              ['Health history',         'Pre-existing conditions may affect what you can get and at what cost.'],
+              ['Hospitalisation tier',   'We treat all H&S cover equally — MediShield Life and a full private plan both score as "covered."'],
+              ['Policy exclusions',      'Your actual cover may be lower than your sum assured due to exclusions or conditions.'],
+              ['Medical inflation',      'Healthcare costs in Singapore rise ~8–10% a year. A sum assured that works today may not in 10 years.'],
             ].map(([title, desc]) => (
               <div key={title} style={{
                 display: 'flex',
@@ -684,7 +775,7 @@ At 15% or above → score: 0 (flagged as high)`}
           </div>
         </Section>
 
-        {/* ── Disclaimer ── */}
+        {/* ── Disclaimer + Coah footer ── */}
         <div style={{
           marginTop: '36px',
           paddingTop: '24px',
@@ -696,9 +787,47 @@ At 15% or above → score: 0 (flagged as high)`}
             not tailored to your personal circumstances. Please consult a MAS-licensed
             financial adviser for advice specific to your situation.
           </p>
-          <p style={{ fontSize: '11px', color: '#C4C9D4', margin: 0 }}>
+          <p style={{ fontSize: '11px', color: '#C4C9D4', margin: '0 0 20px' }}>
             Not affiliated with any insurer or MAS-licensed entity.
           </p>
+
+          {/* Coah signature */}
+          <div style={{
+            paddingTop: '16px',
+            borderTop: '1px solid var(--color-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                fontFamily: 'var(--font-coah)',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: 'var(--color-coah)',
+                letterSpacing: '0.08em',
+              }}>
+                COAH
+              </span>
+              <span style={{
+                fontSize: '11px',
+                color: '#9CA3AF',
+                borderLeft: '1px solid var(--color-border)',
+                paddingLeft: '8px',
+              }}>
+                Modern Utilities for the Common Good
+              </span>
+            </div>
+            <a href="#" style={{
+              fontSize: '11px',
+              color: '#9CA3AF',
+              textDecoration: 'none',
+            }}>
+              coah.sg
+            </a>
+          </div>
         </div>
 
       </div>

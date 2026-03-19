@@ -66,7 +66,10 @@ function PillarRow({ row, index }) {
   const [width, setWidth] = useState(0)
 
   useEffect(() => {
-    const t = setTimeout(() => setWidth(row.isSkipped ? 0 : (row.score ?? 0)), 100 + index * 120)
+    const t = setTimeout(
+      () => setWidth(row.isSkipped ? 0 : (row.score ?? 0)),
+      100 + index * 120
+    )
     return () => clearTimeout(t)
   }, [row, index])
 
@@ -190,13 +193,27 @@ export default function ResultsPage() {
         >
           ←
         </button>
-        <span style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '17px',
-          color: 'var(--color-primary)',
-        }}>
-          Your results
-        </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+          <span style={{
+            fontFamily: 'var(--font-coah)',
+            fontSize: '10px',
+            fontWeight: '600',
+            color: 'var(--color-coah)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            opacity: 0.7,
+          }}>
+            Coah
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '17px',
+            color: 'var(--color-primary)',
+            lineHeight: 1,
+          }}>
+            InsureCheck
+          </span>
+        </div>
       </div>
 
       {/* Compliance line */}
@@ -398,6 +415,45 @@ export default function ResultsPage() {
           </p>
           
           <a href="/how-it-works" style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none' }}>{'How we calculate your score \u2192'}</a>
+
+          {/* Coah signature */}
+          <div style={{
+            marginTop: '20px',
+            paddingTop: '16px',
+            borderTop: '1px solid var(--color-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                fontFamily: 'var(--font-coah)',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: 'var(--color-coah)',
+                letterSpacing: '0.08em',
+              }}>
+                COAH
+              </span>
+              <span style={{
+                fontSize: '11px',
+                color: '#9CA3AF',
+                borderLeft: '1px solid var(--color-border)',
+                paddingLeft: '8px',
+              }}>
+                Modern Utilities for the Common Good
+              </span>
+            </div>
+            <a href="#" style={{
+              fontSize: '11px',
+              color: '#9CA3AF',
+              textDecoration: 'none',
+            }}>
+              coah.sg
+            </a>
+          </div>
         </div>
 
       </div>
@@ -453,14 +509,25 @@ export default function ResultsPage() {
               border: '1px solid var(--color-border)',
               marginBottom: '20px',
             }}>
-              <p style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '15px',
-                color: 'var(--color-primary)',
-                margin: '0 0 4px',
-              }}>
-                InsureCheck
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                <span style={{
+                  fontFamily: 'var(--font-coah)',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  color: 'var(--color-coah)',
+                  letterSpacing: '0.1em',
+                  opacity: 0.6,
+                }}>
+                  COAH
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '14px',
+                  color: 'var(--color-primary)',
+                }}>
+                  InsureCheck
+                </span>
+              </div>
               <p style={{
                 fontSize: '28px',
                 fontWeight: '700',
@@ -489,7 +556,7 @@ export default function ResultsPage() {
 
             <button
               onClick={() => {
-                const text = `My Insurance Score: ${result.finalScore}/100 — ${result.band.label}. How covered are you? Check yours free at InsureCheck.`
+                const text = `My Insurance Score: ${result.finalScore}/100 — ${result.band.label}. How covered are you? Check yours free at InsureCheck — a Coah project. https://sginsurecheck.vercel.app`
                 if (navigator.share) navigator.share({ text })
                 else navigator.clipboard.writeText(text)
                 setShareModal(false)

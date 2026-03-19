@@ -1,10 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 export default function LandingPage() {
-  const router = useRouter()
-
   return (
     <main style={{
       minHeight: '100vh',
@@ -19,7 +15,7 @@ export default function LandingPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "InsureCheck",
+            "name": "InsureCheck by Coah",
             "url": "https://sginsurecheck.vercel.app",
             "description": "Free insurance coverage checker for Singaporeans. Get your Insurance Score in 3 minutes.",
             "applicationCategory": "FinanceApplication",
@@ -42,20 +38,34 @@ export default function LandingPage() {
 
       {/* Nav */}
       <nav style={{
-        padding: '20px 24px',
+        padding: '16px 24px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottom: '1px solid var(--color-border)',
         background: 'var(--color-surface)',
       }}>
-        <span style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '20px',
-          color: 'var(--color-primary)',
-        }}>
-          InsureCheck
-        </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <span style={{
+            fontFamily: 'var(--font-coah)',
+            fontSize: '11px',
+            fontWeight: '600',
+            color: 'var(--color-coah)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            opacity: 0.6,
+          }}>
+            Coah
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '20px',
+            color: 'var(--color-primary)',
+            lineHeight: 1,
+          }}>
+            InsureCheck
+          </span>
+        </div>
         <a href="#how-it-works" style={{
           fontSize: '14px',
           color: 'var(--color-primary)',
@@ -73,8 +83,6 @@ export default function LandingPage() {
         margin: '0 auto',
         textAlign: 'center',
       }}>
-
-        {/* Visually hidden SEO heading */}
         <h1 style={{
           position: 'absolute',
           width: '1px',
@@ -86,10 +94,9 @@ export default function LandingPage() {
           whiteSpace: 'nowrap',
           borderWidth: 0,
         }}>
-          Free Insurance Coverage Checker Singapore — InsureCheck
+          Free Insurance Coverage Checker Singapore — InsureCheck by Coah
         </h1>
 
-        {/* Visual headline */}
         <h2 style={{
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(30px, 6vw, 46px)',
@@ -123,7 +130,6 @@ export default function LandingPage() {
           Check my score — it's free
         </a>
 
-        {/* Trust badges */}
         <div style={{
           marginTop: '20px',
           display: 'flex',
@@ -149,7 +155,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Social proof provocation */}
+      {/* Social proof */}
       <section style={{
         padding: '20px 24px 32px',
         textAlign: 'center',
@@ -222,20 +228,10 @@ export default function LandingPage() {
                   {step}
                 </div>
                 <div>
-                  <p style={{
-                    margin: '0 0 4px',
-                    fontWeight: '600',
-                    color: 'var(--color-primary)',
-                    fontSize: '15px',
-                  }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: '600', color: 'var(--color-primary)', fontSize: '15px' }}>
                     {title}
                   </p>
-                  <p style={{
-                    margin: 0,
-                    color: '#6B7280',
-                    fontSize: '14px',
-                    lineHeight: 1.6,
-                  }}>
+                  <p style={{ margin: 0, color: '#6B7280', fontSize: '14px', lineHeight: 1.6 }}>
                     {body}
                   </p>
                 </div>
@@ -245,8 +241,80 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Built by Coah */}
+      <section style={{ padding: '48px 24px', maxWidth: '520px', margin: '0 auto' }}>
+        <div style={{
+          background: 'var(--color-surface)',
+          borderRadius: '16px',
+          border: '1px solid var(--color-border)',
+          padding: '28px 24px',
+          borderTop: '3px solid var(--color-coah)',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '14px',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-coah)',
+              fontSize: '18px',
+              fontWeight: '600',
+              color: 'var(--color-coah)',
+              letterSpacing: '0.04em',
+            }}>
+              COAH
+            </span>
+            <span style={{
+              fontSize: '11px',
+              color: '#9CA3AF',
+              borderLeft: '1px solid var(--color-border)',
+              paddingLeft: '10px',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+            }}>
+              Modern Utilities for the Common Good
+            </span>
+          </div>
+          <p style={{
+            fontSize: '14px',
+            color: '#374151',
+            lineHeight: 1.7,
+            margin: '0 0 14px',
+          }}>
+            InsureCheck is built by Coah — a collective dedicated to creating transparent,
+            privacy-first tools for Singaporeans. No data is stored on any server.
+            No agents will call. No commissions influence the math.
+          </p>
+          <p style={{
+            fontSize: '13px',
+            color: '#6B7280',
+            lineHeight: 1.6,
+            margin: '0 0 16px',
+            fontStyle: 'italic',
+          }}>
+            "We put the logic on a hill for everyone to see."
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {['Incorruptible logic', 'Radical privacy', 'Excellence in craft'].map(value => (
+              <span key={value} style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                color: 'var(--color-coah)',
+                background: '#F1EFE8',
+                padding: '4px 10px',
+                borderRadius: '100px',
+                letterSpacing: '0.03em',
+              }}>
+                {value}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Secondary CTA */}
-      <section style={{ padding: '56px 24px', textAlign: 'center' }}>
+      <section style={{ padding: '8px 24px 56px', textAlign: 'center' }}>
         <p style={{
           fontFamily: 'var(--font-display)',
           fontSize: '22px',
@@ -256,11 +324,7 @@ export default function LandingPage() {
         }}>
           Know before you buy. Check before you commit.
         </p>
-        <p style={{
-          color: '#9CA3AF',
-          fontSize: '14px',
-          margin: '0 0 28px',
-        }}>
+        <p style={{ color: '#9CA3AF', fontSize: '14px', margin: '0 0 28px' }}>
           Takes 3 minutes. No sign-up required.
         </p>
         <a href="/check" style={{
@@ -279,24 +343,137 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer style={{
-        padding: '24px',
         borderTop: '1px solid var(--color-border)',
-        textAlign: 'center',
+        background: 'var(--color-coah)',
       }}>
-        <p style={{
-          fontSize: '12px',
-          color: '#9CA3AF',
-          margin: '0 0 6px',
-          lineHeight: 1.6,
-        }}>
-          This tool is for educational purposes only and does not constitute financial advice.
-          Coverage benchmarks are based on general Singapore financial planning guidelines.
-        </p>
-        <p style={{ fontSize: '12px', color: '#9CA3AF', margin: '0 0 8px' }}>
-          Not affiliated with any insurer or MAS-licensed entity.
-        </p>
-        
-        <a href="/how-it-works" style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none' }}>{'How we calculate your score \u2192'}</a>
+        <div style={{ padding: '28px 24px', maxWidth: '520px', margin: '0 auto' }}>
+
+          {/* Coah wordmark row */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '20px',
+            marginBottom: '20px',
+          }}>
+            <div>
+              <span style={{
+                fontFamily: 'var(--font-coah)',
+                fontSize: '22px',
+                fontWeight: '600',
+                color: '#ffffff',
+                letterSpacing: '0.06em',
+                display: 'block',
+                marginBottom: '4px',
+              }}>
+                COAH
+              </span>
+              <span style={{
+                fontSize: '11px',
+                color: 'rgba(255,255,255,0.45)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}>
+                Modern Utilities for the Common Good
+              </span>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{
+                fontSize: '11px',
+                color: 'rgba(255,255,255,0.35)',
+                margin: '0 0 4px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+              }}>
+                Built for Singapore
+              </p>
+              <a href="#" style={{
+                fontSize: '12px',
+                color: 'rgba(255,255,255,0.45)',
+                textDecoration: 'none',
+              }}>
+                coah.sg
+              </a>
+            </div>
+          </div>
+
+          {/* More from Coah */}
+          <div style={{
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            paddingTop: '16px',
+            marginBottom: '20px',
+          }}>
+            <p style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.35)',
+              margin: '0 0 10px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+            }}>
+              More from Coah
+            </p>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {[
+                { name: 'InsureCheck',      desc: 'Insurance benchmarking',    active: true  },
+                { name: 'SG Affordability', desc: 'Car & housing calculator',  active: false },
+              ].map(tool => (
+                <div key={tool.name} style={{
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  background: tool.active ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${tool.active ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)'}`,
+                }}>
+                  <p style={{
+                    margin: '0 0 2px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: tool.active ? '#ffffff' : 'rgba(255,255,255,0.3)',
+                  }}>
+                    {tool.name}
+                  </p>
+                  <p style={{
+                    margin: 0,
+                    fontSize: '11px',
+                    color: tool.active ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)',
+                  }}>
+                    {tool.active ? tool.desc : `${tool.desc} — coming soon`}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div style={{
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            paddingTop: '16px',
+          }}>
+            <p style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.35)',
+              lineHeight: 1.6,
+              margin: '0 0 6px',
+            }}>
+              This tool is for educational purposes only and does not constitute financial advice.
+              Coverage benchmarks are based on general Singapore financial planning guidelines.
+              Please consult a MAS-licensed financial adviser for personal recommendations.
+            </p>
+            <p style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.2)',
+              margin: '0 0 8px',
+            }}>
+              Not affiliated with any insurer or MAS-licensed entity.
+            </p>
+            <a href="/how-it-works" style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.4)',
+              textDecoration: 'none',
+            }}>{'How we calculate your score \u2192'}</a>
+          </div>
+
+        </div>
       </footer>
 
     </main>
