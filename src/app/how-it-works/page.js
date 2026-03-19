@@ -487,27 +487,27 @@ Band inputs → band midpoint used as proxy → score shown as "estimated"`}
               COAH
             </span>
             <span style={{
-              fontSize: '11px',
-              color: 'rgba(255,255,255,0.5)',
-              borderLeft: '1px solid rgba(255,255,255,0.2)',
-              paddingLeft: '8px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-            }}>
-              Incorruptible Logic
-            </span>
+  fontSize: '11px',
+  color: 'rgba(255,255,255,0.5)',
+  borderLeft: '1px solid rgba(255,255,255,0.2)',
+  paddingLeft: '8px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+}}>
+  Why this is free
+</span>
           </div>
           <p style={{
-            fontSize: '13px',
-            color: 'rgba(255,255,255,0.8)',
-            lineHeight: 1.7,
-            margin: 0,
-          }}>
-            InsureCheck runs on Coah's core principle: incorruptible logic.
-            Our benchmarks are based on CFP and MAS principles — not commissions,
-            not referral fees, not agent incentives. The math is on a hill for
-            everyone to see.
-          </p>
+  fontSize: '13px',
+  color: 'rgba(255,255,255,0.8)',
+  lineHeight: 1.7,
+  margin: 0,
+}}>
+  InsureCheck has no ads, no affiliate links, and no advisor referral fees.
+  We don't earn anything when you use it. It's free because we believe
+  Singaporeans deserve access to honest financial tools without a sales
+  agenda attached. This is what Coah is built for.
+</p>
         </div>
 
         {/* ── Pillars ── */}
@@ -708,10 +708,7 @@ At 15% or above → score: 0 (flagged as high)`}
                 title: 'Singapore Cancer Registry',
                 desc: 'Average cancer treatment duration and cost ranges used in the CI needs calculation.',
               },
-              {
-                title: 'Kaplan / SIM financial planning course materials',
-                desc: 'The 10–15% premium-to-income guideline used in practitioner education in Singapore.',
-              },
+
             ].map(item => (
               <div key={item.title} style={{
                 padding: '12px 16px',

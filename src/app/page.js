@@ -295,21 +295,7 @@ export default function LandingPage() {
           }}>
             "We put the logic on a hill for everyone to see."
           </p>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {['Incorruptible logic', 'Radical privacy', 'Excellence in craft'].map(value => (
-              <span key={value} style={{
-                fontSize: '11px',
-                fontWeight: '600',
-                color: 'var(--color-coah)',
-                background: '#F1EFE8',
-                padding: '4px 10px',
-                borderRadius: '100px',
-                letterSpacing: '0.03em',
-              }}>
-                {value}
-              </span>
-            ))}
-          </div>
+
         </div>
       </section>
 
