@@ -290,8 +290,9 @@ const INITIAL = {
 
 function parseNum(val) {
   if (val === null || val === undefined || val === '') return null
-  const n = parseInt(String(val).replace(/,/g, ''), 10)
-  return isNaN(n) ? null : n
+  const n = parseInt(String(val).replace(/[^0-9]/g, ''), 10)
+  if (isNaN(n) || n < 0 || n > 100_000_000) return null
+  return n
 }
 
 function fmtAmount(n) {
@@ -560,7 +561,11 @@ export default function CheckPage() {
   }
 
   function canProceed() {
-    if (step === 1) return form.age && parseNum(form.annualIncome) > 0
+    if (step === 1) {
+      const age = parseInt(form.age)
+      const income = parseNum(form.annualIncome)
+      return age >= 16 && age <= 100 && income > 0 && income <= 100_000_000
+    }
     if (step === 2) return form.hasHosp !== null
     if (step === 3) {
       if (form.hasCI === 'no' || form.hasCI === 'unsure') return true
