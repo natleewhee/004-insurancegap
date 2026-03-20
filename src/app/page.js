@@ -452,7 +452,7 @@ export default function LandingPage() {
             }}>
               Not affiliated with any insurer or MAS-licensed entity.
             </p>
-            <a href="/how-it-works" style={{
+            <a href="/the-math" style={{
               fontSize: '11px',
               color: 'rgba(255,255,255,0.4)',
               textDecoration: 'none',

@@ -414,7 +414,7 @@ export default function ResultsPage() {
             Not affiliated with any insurer or MAS-licensed entity.
           </p>
           
-          <a href="/how-it-works" style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none' }}>{'How we calculate your score \u2192'}</a>
+          <a href="/the-math" style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none' }}>{'How we calculate your score \u2192'}</a>
 
           {/* Coah signature */}
           <div style={{

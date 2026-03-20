@@ -7,7 +7,7 @@ export default function sitemap() {
       priority: 1,
     },
     {
-      url: 'https://sginsurecheck.vercel.app/how-it-works',
+      url: 'https://sginsurecheck.vercel.app/the-math',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
