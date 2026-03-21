@@ -173,47 +173,60 @@ export default function ResultsPage() {
 
       {/* Header */}
       <div style={{
-        background: 'var(--color-surface)',
-        borderBottom: '1px solid var(--color-border)',
+        background: 'var(--color-coah)',
+        boxShadow: '0 1px 0 rgba(0,0,0,0.2)',
         padding: '16px 24px',
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
       }}>
-        <button
-          onClick={() => router.push('/check')}
-          style={{
-            background: 'none',
-            border: 'none',
-            fontSize: '18px',
-            cursor: 'pointer',
-            color: 'var(--color-primary)',
-            padding: '4px 8px 4px 0',
-          }}
-        >
-          ←
-        </button>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-          <span style={{
-            fontFamily: 'var(--font-coah)',
-            fontSize: '10px',
-            fontWeight: '600',
-            color: 'var(--color-coah)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            opacity: 0.7,
-          }}>
-            Coah
-          </span>
-          <span style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '17px',
-            color: 'var(--color-primary)',
-            lineHeight: 1,
-          }}>
-            InsureCheck
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button
+            onClick={() => router.push('/check')}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '18px',
+              cursor: 'pointer',
+              color: '#fff',
+              padding: '4px 8px 4px 0',
+            }}
+          >
+            ←
+          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+            <span style={{
+              fontFamily: 'var(--font-coah)',
+              fontSize: '10px',
+              fontWeight: '600',
+              color: 'rgba(255,255,255,0.5)',
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+            }}>
+              COAH
+            </span>
+            <span style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '17px',
+              color: '#fff',
+              lineHeight: 1,
+            }}>
+              InsureCheck
+            </span>
+          </div>
         </div>
+        <a href="/the-math" style={{
+          fontSize: '11px',
+          color: 'rgba(255,255,255,0.4)',
+          textDecoration: 'none',
+          borderBottom: '1px solid rgba(255,255,255,0.15)',
+          paddingBottom: '1px',
+        }}>
+          The Math →
+        </a>
       </div>
 
       {/* Compliance line */}

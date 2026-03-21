@@ -15,10 +15,10 @@ const s = {
   header: {
     position: 'sticky',
     top: 0,
-    zIndex: 10,
-    background: 'var(--color-surface)',
-    borderBottom: '1px solid var(--color-border)',
-    padding: '16px 24px 12px',
+    zIndex: 100,
+    background: 'var(--color-coah)',
+    boxShadow: '0 1px 0 rgba(0,0,0,0.2)',
+    padding: '12px 24px 10px',
   },
   topRow: {
     display: 'flex',
@@ -32,13 +32,13 @@ const s = {
     padding: '4px 8px 4px 0',
     cursor: 'pointer',
     fontSize: '18px',
-    color: 'var(--color-primary)',
+    color: '#fff',
     lineHeight: 1,
   },
   logo: {
     fontFamily: 'var(--font-display)',
     fontSize: '17px',
-    color: 'var(--color-primary)',
+    color: '#fff',
   },
   progressTrack: {
     height: '4px',
@@ -979,18 +979,17 @@ export default function CheckPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
       <span style={{
         fontFamily: 'var(--font-coah)',
-        fontSize: '9px',
+        fontSize: '10px',
         fontWeight: '600',
-        color: 'var(--color-coah)',
-        letterSpacing: '0.1em',
+        color: 'rgba(255,255,255,0.5)',
+        letterSpacing: '0.14em',
         textTransform: 'uppercase',
-        opacity: 0.6,
       }}>
         Coah
       </span>
       <span style={s.logo}>InsureCheck</span>
     </div>
-    <span style={{ marginLeft: 'auto', ...s.stepLabel, marginBottom: 0 }}>
+    <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'rgba(255,255,255,0.4)', marginBottom: 0 }}>
       {step} of {TOTAL_STEPS}
     </span>
   </div>
@@ -999,7 +998,7 @@ export default function CheckPage() {
   </div>
   <p style={{
     fontSize: '11px',
-    color: '#9CA3AF',
+    color: 'rgba(255,255,255,0.35)',
     margin: '8px 0 0',
     textAlign: 'center',
   }}>

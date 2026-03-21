@@ -38,44 +38,41 @@ export default function LandingPage() {
 
       {/* Nav */}
       <nav style={{
-        background: 'var(--color-coah)',
-        padding: '16px 32px',
+        padding: '16px 24px',
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        boxShadow: '0 1px 0 rgba(0,0,0,0.2)',
+        alignItems: 'center',
+        borderBottom: '1px solid var(--color-border)',
+        background: 'var(--color-surface)',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           <span style={{
             fontFamily: 'var(--font-coah)',
-            fontSize: '10px',
+            fontSize: '11px',
             fontWeight: '600',
-            color: 'rgba(255,255,255,0.5)',
-            letterSpacing: '0.14em',
+            color: 'var(--color-coah)',
+            letterSpacing: '0.12em',
             textTransform: 'uppercase',
+            opacity: 0.6,
           }}>
-            COAH
+            Coah
           </span>
           <span style={{
             fontFamily: 'var(--font-display)',
-            fontSize: '18px',
-            color: '#fff',
+            fontSize: '20px',
+            color: 'var(--color-primary)',
             lineHeight: 1,
           }}>
             InsureCheck
           </span>
         </div>
-        <a href="/the-math" style={{
-          fontSize: '11px',
-          color: 'rgba(255,255,255,0.4)',
+        <a href="#how-it-works" style={{
+          fontSize: '14px',
+          color: 'var(--color-primary)',
           textDecoration: 'none',
-          borderBottom: '1px solid rgba(255,255,255,0.15)',
-          paddingBottom: '1px',
+          opacity: 0.6,
         }}>
-          The Math →
+          How it works
         </a>
       </nav>
 
