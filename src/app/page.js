@@ -327,142 +327,48 @@ export default function LandingPage() {
         </a>
       </section>
 
-      {/* Footer */}
-      <footer style={{
-        borderTop: '1px solid var(--color-border)',
-        background: 'var(--color-coah)',
-      }}>
-        <div style={{ padding: '28px 24px', maxWidth: '520px', margin: '0 auto' }}>
-
-          {/* Coah wordmark row */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '20px',
-            marginBottom: '20px',
-          }}>
-            <div>
-              <span style={{
-                fontFamily: 'var(--font-coah)',
-                fontSize: '22px',
-                fontWeight: '600',
-                color: '#ffffff',
-                letterSpacing: '0.06em',
-                display: 'block',
-                marginBottom: '4px',
-              }}>
-                COAH
-              </span>
-              <span style={{
-                fontSize: '11px',
-                color: 'rgba(255,255,255,0.45)',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-              }}>
-                Modern Utilities for the Common Good
-              </span>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{
-                fontSize: '11px',
-                color: 'rgba(255,255,255,0.35)',
-                margin: '0 0 4px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-              }}>
-                Built for Singapore
-              </p>
-              <a href="#" style={{
-                fontSize: '12px',
-                color: 'rgba(255,255,255,0.45)',
-                textDecoration: 'none',
-              }}>
-                coah.sg
-              </a>
-            </div>
-          </div>
-
-          {/* More from Coah */}
-          <div style={{
-            borderTop: '1px solid rgba(255,255,255,0.1)',
-            paddingTop: '16px',
-            marginBottom: '20px',
-          }}>
-            <p style={{
-              fontSize: '11px',
-              color: 'rgba(255,255,255,0.35)',
-              margin: '0 0 10px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-            }}>
-              More from Coah
-            </p>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {[
-                { name: 'DriveReady', desc: 'Car ownership costs',    url: 'https://sgdriveready.vercel.app', active: true },
-                { name: 'WhatETF',   desc: 'ETF portfolio examples', url: 'https://sgwhatetf.vercel.app',   active: true },
-              ].map(tool => (
-                <a key={tool.name} href={tool.url} target="_blank" rel="noopener noreferrer" style={{
-                  display: 'block',
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  background: 'rgba(255,255,255,0.1)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  textDecoration: 'none',
-                }}>
-                  <p style={{
-                    margin: '0 0 2px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    color: '#ffffff',
-                  }}>
-                    {tool.name}
-                  </p>
-                  <p style={{
-                    margin: 0,
-                    fontSize: '11px',
-                    color: 'rgba(255,255,255,0.5)',
-                  }}>
-                    {tool.desc}
-                  </p>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Disclaimer */}
-          <div style={{
-            borderTop: '1px solid rgba(255,255,255,0.1)',
-            paddingTop: '16px',
-          }}>
-            <p style={{
-              fontSize: '11px',
-              color: 'rgba(255,255,255,0.35)',
-              lineHeight: 1.6,
-              margin: '0 0 6px',
-            }}>
-              This tool is for educational purposes only and does not constitute financial advice.
-              Coverage benchmarks are based on general Singapore financial planning guidelines.
-              Please consult a MAS-licensed financial adviser for personal recommendations.
-            </p>
-            <p style={{
-              fontSize: '11px',
-              color: 'rgba(255,255,255,0.2)',
-              margin: '0 0 8px',
-            }}>
-              Not affiliated with any insurer or MAS-licensed entity.
-            </p>
-            <a href="/the-math" style={{
-              fontSize: '11px',
-              color: 'rgba(255,255,255,0.4)',
-              textDecoration: 'none',
-            }}>{'How we calculate your score \u2192'}</a>
-          </div>
-
+      <footer style={{ background: 'var(--color-coah)', padding: '40px 32px 28px' }}>
+  <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, marginBottom: 32 }}>
+      <div>
+        <div style={{ fontFamily: 'var(--font-coah)', fontSize: 20, fontWeight: 600, color: '#fff', letterSpacing: '0.08em', marginBottom: 4 }}>COAH</div>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>Modern Utilities for the Common Good</div>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 14 }}>
+          InsureCheck is a free, no-ads, no-commission tool built by Coah. All calculations run entirely in your browser — no data ever leaves your device.
+        </p>
+        <p style={{ fontFamily: 'var(--font-display)', fontSize: 13, color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>"A Coah Project — Built for Singapore."</p>
+      </div>
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>More from Coah</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {[
+            { name: 'DriveReady', desc: 'Car ownership calculator', url: 'https://sgdriveready.vercel.app' },
+            { name: 'WhatETF',    desc: 'ETF portfolio examples',   url: 'https://sgwhatetf.vercel.app' },
+          ].map(t => (
+            <a key={t.name} href={t.url} target="_blank" rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', textDecoration: 'none' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 15, color: 'rgba(255,255,255,0.85)', marginBottom: 2 }}>{t.name}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{t.desc}</div>
+              </div>
+              <span style={{ fontSize: 10, fontWeight: 700, borderRadius: 100, padding: '3px 9px', background: 'rgba(29,158,117,0.25)', color: '#5DD3AE', letterSpacing: '0.04em' }}>Live</span>
+            </a>
+          ))}
         </div>
-      </footer>
+      </div>
+    </div>
+    <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20, marginBottom: 16 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 6 }}>MAS Disclaimer</div>
+      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', lineHeight: 1.7 }}>
+        This tool is for educational purposes only and does not constitute financial advice. Coverage benchmarks are based on general Singapore financial planning guidelines. Consult a MAS-licensed financial adviser for personal recommendations.
+      </p>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>Not affiliated with any insurer or MAS-licensed entity. · © 2025 Coah</span>
+      <a href="/the-math" style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>How we calculate → /the-math</a>
+    </div>
+  </div>
+</footer>
 
     </main>
   )
