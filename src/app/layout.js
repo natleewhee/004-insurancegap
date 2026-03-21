@@ -1,8 +1,6 @@
 // app/layout.js
 import './globals.css';
 import { DM_Sans, DM_Serif_Display } from 'next/font/google';
-import Header from '../components/Header'; // Updated to relative path
-import Footer from '../components/Footer'; // Updated to relative path
 
 const dmSans = DM_Sans({ 
   subsets: ['latin'], 
@@ -18,7 +16,16 @@ const dmSerif = DM_Serif_Display({
 
 export const metadata = {
   title: 'InsureCheck — A Coah Project',
-  description: 'Insurance coverage benchmarking for Singaporeans.',
+  description: 'Insurance coverage benchmarking for Singaporeans. Get your Insurance Score in 3 minutes — free, neutral, no agent involved.',
+  keywords: ['insurance Singapore', 'insurance coverage check', 'InsureCheck', 'Coah'],
+  openGraph: {
+    title: 'InsureCheck — Free Insurance Coverage Check for Singaporeans',
+    description: 'Score your insurance coverage in 3 minutes. Free, neutral, no sign-up required.',
+    url: 'https://sginsurecheck.vercel.app',
+    siteName: 'InsureCheck by Coah',
+    locale: 'en_SG',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -27,11 +34,7 @@ export default function RootLayout({ children }) {
       <head>
         <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600&display=swap" rel="stylesheet" />
       </head>
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
